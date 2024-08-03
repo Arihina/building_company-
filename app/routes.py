@@ -1,6 +1,7 @@
 from flask import current_app as app
 from flask import jsonify
 from sqlalchemy import text
+
 from . import db
 
 
