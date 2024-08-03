@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import db
 
@@ -39,6 +39,17 @@ class Client(Base):
     organization_name: Mapped[str]
 
 
+class Warehouse(Base):
+    __tablename__ = 'warehouse'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    quantity: Mapped[int]
+    address: Mapped[str]
+    product_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('product.id'))
+
+    product = relationship("Product", back_populates="warehouse")
+
+
 class Product(Base):
     __tablename__ = 'product'
 
@@ -47,3 +58,5 @@ class Product(Base):
     name: Mapped[str]
     price: Mapped[float]
     unit_type: Mapped[str]
+
+    warehouse = relationship("Warehouse", uselist=False, back_populates="product")
