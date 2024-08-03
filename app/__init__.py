@@ -11,3 +11,4 @@ db = SQLAlchemy(app)
 
 with app.app_context():
     from . import routes
+    from . import models
