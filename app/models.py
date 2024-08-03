@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import db
@@ -20,6 +22,8 @@ class Employee(Base):
     full_name: Mapped[str]
     email: Mapped[str]
 
+    contract = relationship("Contract", back_populates="employee")
+
 
 class Driver(Base):
     __tablename__ = 'driver'
@@ -37,6 +41,8 @@ class Client(Base):
     phone_number: Mapped[str]
     full_name: Mapped[str]
     organization_name: Mapped[str]
+
+    contract = relationship("Contract", back_populates="client")
 
 
 class Warehouse(Base):
@@ -60,3 +66,30 @@ class Product(Base):
     unit_type: Mapped[str]
 
     warehouse = relationship("Warehouse", uselist=False, back_populates="product")
+    consists = relationship("Consist", back_populates="product")
+
+
+class Consist(Base):
+    __tablename__ = 'consist'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    data: Mapped[datetime.datetime]
+    order_amount: Mapped[float]
+    account_number: Mapped[str]
+    product_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('product.id'))
+
+    product = relationship("Product", back_populates="consists")
+    contract = relationship("Contract", back_populates="consist")
+
+
+class Contract(Base):
+    __tablename__ = 'contract'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    contract_consist_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('consist.id'))
+    client_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('client.id'))
+    employee_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('employee.id'))
+
+    consist = relationship("Consist", back_populates="contract")
+    client = relationship("Client", uselist=False, back_populates="contract")
+    employee = relationship("Employee", uselist=False, back_populates="contract")
