@@ -22,7 +22,7 @@ class Employee(Base):
     full_name: Mapped[str]
     email: Mapped[str]
 
-    contract = relationship("Contract", back_populates="employee")
+    contract = relationship('Contract', back_populates='employee')
 
 
 class Driver(Base):
@@ -33,6 +33,8 @@ class Driver(Base):
     phone_number: Mapped[str]
     full_name: Mapped[str]
 
+    order = relationship('Orders', back_populates='driver')
+
 
 class Client(Base):
     __tablename__ = 'client'
@@ -42,7 +44,7 @@ class Client(Base):
     full_name: Mapped[str]
     organization_name: Mapped[str]
 
-    contract = relationship("Contract", back_populates="client")
+    contract = relationship('Contract', back_populates='client')
 
 
 class Warehouse(Base):
@@ -53,7 +55,8 @@ class Warehouse(Base):
     address: Mapped[str]
     product_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('product.id'))
 
-    product = relationship("Product", back_populates="warehouse")
+    product = relationship('Product', back_populates='warehouse')
+    order = relationship('Orders', back_populates='warehouse')
 
 
 class Product(Base):
@@ -65,8 +68,8 @@ class Product(Base):
     price: Mapped[float]
     unit_type: Mapped[str]
 
-    warehouse = relationship("Warehouse", uselist=False, back_populates="product")
-    consists = relationship("Consist", back_populates="product")
+    warehouse = relationship('Warehouse', uselist=False, back_populates='product')
+    consists = relationship('Consist', back_populates='product')
 
 
 class Consist(Base):
@@ -78,8 +81,8 @@ class Consist(Base):
     account_number: Mapped[str]
     product_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('product.id'))
 
-    product = relationship("Product", back_populates="consists")
-    contract = relationship("Contract", back_populates="consist")
+    product = relationship('Product', back_populates='consist')
+    contract = relationship('Contract', back_populates='consist')
 
 
 class Contract(Base):
@@ -90,6 +93,24 @@ class Contract(Base):
     client_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('client.id'))
     employee_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('employee.id'))
 
-    consist = relationship("Consist", back_populates="contract")
-    client = relationship("Client", uselist=False, back_populates="contract")
-    employee = relationship("Employee", uselist=False, back_populates="contract")
+    consist = relationship('Consist', back_populates='contract')
+    client = relationship('Client', uselist=False, back_populates='contract')
+    employee = relationship('Employee', uselist=False, back_populates='contract')
+    order = relationship('Orders', back_populates='contract')
+
+
+class Orders(Base):
+    __tablename__ = 'orders'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    contract_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('contract.id'))
+    warehouse_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('warehouse.id'))
+    driver_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('driver.id'))
+    delivery_address: Mapped[str]
+    prepayment: Mapped[float]
+    product_volume: Mapped[int]
+    status: Mapped[bool]
+
+    contract = relationship('Contract', uselist=False, back_populates='orders')
+    warehouse = relationship('Warehouse', uselist=False, back_populates='orders')
+    driver = relationship('Driver', uselist=False, back_populates='orders')
