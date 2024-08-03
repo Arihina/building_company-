@@ -21,6 +21,15 @@ class Employee(Base):
     email: Mapped[str]
 
 
+class Driver(Base):
+    __tablename__ = 'driver'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    car_type: Mapped[str]
+    phone_number: Mapped[str]
+    full_name: Mapped[str]
+
+
 class Client(Base):
     __tablename__ = 'client'
 
