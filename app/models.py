@@ -33,7 +33,7 @@ class Driver(Base):
     phone_number: Mapped[str]
     full_name: Mapped[str]
 
-    order = relationship('Orders', back_populates='driver')
+    orders = relationship('Orders', back_populates='driver')
 
 
 class Client(Base):
@@ -56,7 +56,7 @@ class Warehouse(Base):
     product_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('product.id'))
 
     product = relationship('Product', back_populates='warehouse')
-    order = relationship('Orders', back_populates='warehouse')
+    orders = relationship('Orders', back_populates='warehouse')
 
 
 class Product(Base):
@@ -69,7 +69,7 @@ class Product(Base):
     unit_type: Mapped[str]
 
     warehouse = relationship('Warehouse', uselist=False, back_populates='product')
-    consists = relationship('Consist', back_populates='product')
+    consist = relationship('Consist', back_populates='product')
 
 
 class Consist(Base):
@@ -96,7 +96,7 @@ class Contract(Base):
     consist = relationship('Consist', back_populates='contract')
     client = relationship('Client', uselist=False, back_populates='contract')
     employee = relationship('Employee', uselist=False, back_populates='contract')
-    order = relationship('Orders', back_populates='contract')
+    orders = relationship('Orders', back_populates='contract')
 
 
 class Orders(Base):
