@@ -91,9 +91,9 @@ def employee(id):
                 employee.phone_number = employee_dto['phone_number']
             if employee_dto['email']:
                 employee.email = employee_dto['email']
-            print('OK')
+
             db.session.commit()
-            print('OK')
+
             return jsonify({'message': 'UPDATED'}), 200
         except Exception as ex:
             print(ex)
