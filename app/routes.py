@@ -1,8 +1,10 @@
 from flask import current_app as app
 from flask import jsonify
-from sqlalchemy import text
+from sqlalchemy import text, select
+from pprint import pprint
 
 from . import db
+from . import models
 
 
 @app.route('/')
@@ -15,3 +17,15 @@ def index():
     }
 
     return jsonify(data)
+
+
+@app.route('/employees', methods=['GET'])
+def get_employees():
+    query = (
+        select(models.Employee)
+    )
+    employee = db.session.execute(query).scalars().all()
+    pprint(employee)
+
+    return 'OK', 200
+
