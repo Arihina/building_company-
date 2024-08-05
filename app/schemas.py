@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class EmployeeSchema(BaseModel):
+class EmployeeDto(BaseModel):
     id: int
     post: str
     phone_number: str

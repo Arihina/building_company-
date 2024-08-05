@@ -29,7 +29,7 @@ def employees():
             )
             employees = db.session.execute(query).scalars().all()
             employees_dto = [
-                schemas.EmployeeSchema.from_orm(employee).dict() for employee in employees
+                schemas.EmployeeDto.from_orm(employee).dict() for employee in employees
             ]
 
             return jsonify(employees_dto), 200
@@ -63,7 +63,7 @@ def employee(id):
     if request.method == 'GET':
         try:
             employee = models.Employee.query.get(id)
-            employee_dto = schemas.EmployeeSchema.from_orm(employee).dict()
+            employee_dto = schemas.EmployeeDto.from_orm(employee).dict()
 
             if not employee:
                 return jsonify({'error': 'Employee not found'}), 404
