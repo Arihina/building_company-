@@ -71,6 +71,13 @@ class EmployeeTestCase(unittest.TestCase):
         response = requests.delete(url)
         self.assertEqual(response.status_code, 204)
 
+    def test_no_found(self):
+        employee_id = 500
+        url = f'{self.BASE_URL}/{employee_id}'
+
+        response = requests.get(url)
+        self.assertEqual(response.status_code, 404)
+
 
 if __name__ == '__main__':
     unittest.main()
