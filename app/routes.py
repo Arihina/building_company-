@@ -83,13 +83,13 @@ def employee(id):
 
             employee_dto = request.get_json()
 
-            if employee_dto['full_name']:
+            if 'full_name' in employee_dto:
                 employee.full_name = employee_dto['full_name']
-            if employee_dto['post']:
+            if 'post' in employee_dto:
                 employee.post = employee_dto['post']
-            if employee_dto['phone_number']:
+            if 'phone_number' in employee_dto:
                 employee.phone_number = employee_dto['phone_number']
-            if employee_dto['email']:
+            if 'email' in employee_dto:
                 employee.email = employee_dto['email']
 
             db.session.commit()
