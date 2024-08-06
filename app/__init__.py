@@ -12,5 +12,9 @@ app.config['SECRET_KEY'] = settings.app_secret_key
 db = SQLAlchemy(app)
 
 with app.app_context():
-    from . import routes
+    from .routes.employees import employees_bp
+    from .routes.info import info_bp
+
+    app.register_blueprint(employees_bp)
+    app.register_blueprint(info_bp)
     from . import models

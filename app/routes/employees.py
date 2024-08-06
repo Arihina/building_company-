@@ -1,13 +1,14 @@
-from flask import current_app as app
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
 from sqlalchemy import text, select
 
-from . import db
-from . import models
-from . import schemas
+from .. import db
+from .. import models
+from .. import schemas
+
+employees_bp = Blueprint('employees_bp', __name__)
 
 
-@app.route('/')
+@employees_bp.route('/')
 def index():
     version_query = db.session.execute(text("SELECT version()")).fetchone()
     postgres_version = version_query[0] if version_query else "Unknown"
@@ -20,7 +21,7 @@ def index():
     return jsonify(data)
 
 
-@app.route('/employees', methods=['GET', 'POST'])
+@employees_bp.route('/employees', methods=['GET', 'POST'])
 def employees():
     if request.method == 'GET':
         try:
@@ -58,16 +59,15 @@ def employees():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-@app.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@employees_bp.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def employee(id):
     if request.method == 'GET':
         try:
             employee = models.Employee.query.get(id)
-            employee_dto = schemas.EmployeeDto.from_orm(employee).dict()
-
             if not employee:
                 return jsonify({'error': 'Employee not found'}), 404
 
+            employee_dto = schemas.EmployeeDto.from_orm(employee).dict()
             return jsonify({"employee": employee_dto}), 200
 
         except Exception as ex:
@@ -96,7 +96,6 @@ def employee(id):
 
             return jsonify({'message': 'UPDATED'}), 200
         except Exception as ex:
-            print(ex)
             db.session.rollback()
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 

@@ -65,7 +65,7 @@ class EmployeeTestCase(unittest.TestCase):
         self.assertEqual(response_data['message'], 'CREATED')
 
     def test_del_employees(self):
-        employee_id = 28
+        employee_id = 27
         url = f'{self.BASE_URL}/{employee_id}'
 
         response = requests.delete(url)
