@@ -30,7 +30,7 @@ class ClientTestCase(unittest.TestCase):
         response_data = response.json()
         self.assertIsInstance(response_data, list)
 
-    def test_post_clients(self):
+    def test_post_client(self):
         url = self.BASE_URL
         headers = {'Content-Type': 'application/json'}
         data = {

@@ -31,7 +31,7 @@ class EmployeeTestCase(unittest.TestCase):
         response_data = response.json()
         self.assertIsInstance(response_data, list)
 
-    def test_post_employees(self):
+    def test_post_employee(self):
         url = self.BASE_URL
         headers = {'Content-Type': 'application/json'}
         data = {
