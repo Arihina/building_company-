@@ -22,9 +22,12 @@ class ClientDto(BaseModel):
         from_attributes = True
 
 
-class ProductDro(BaseModel):
+class ProductDto(BaseModel):
     id: int
     type: str
     name: str
     price: float
     unit_type: str
+
+    class Config:
+        from_attributes = True
