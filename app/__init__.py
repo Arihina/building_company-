@@ -1,3 +1,8 @@
+import json
+import logging.config
+import os
+from logging import getLogger
+
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -10,6 +15,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = settings.db_url
 app.config['SECRET_KEY'] = settings.app_secret_key
 
 db = SQLAlchemy(app)
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+logger_config = os.path.join(current_dir, 'logger.config')
+with open(logger_config) as file:
+    cfg = json.load(file)
+logging.config.dictConfig(cfg)
+logger = getLogger()
 
 with app.app_context():
     from .routes.employees import employees_bp

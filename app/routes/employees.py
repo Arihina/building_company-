@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 
-from .. import db
+from .. import db, logger
 from .. import models
 from .. import schemas
 
@@ -24,6 +24,7 @@ def employees():
 
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'POST':
@@ -43,6 +44,7 @@ def employees():
 
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
@@ -59,6 +61,7 @@ def employee(id):
 
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'PUT':
@@ -84,6 +87,7 @@ def employee(id):
             return jsonify({'message': 'UPDATED'}), 200
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'DELETE':
@@ -98,4 +102,5 @@ def employee(id):
                 return jsonify({'error': 'Employee not found'}), 404
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500

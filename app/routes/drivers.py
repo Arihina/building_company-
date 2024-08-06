@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 
-from .. import db
+from .. import db, logger
 from .. import models
 from .. import schemas
 
@@ -24,6 +24,7 @@ def drivers():
 
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'POST':
@@ -42,6 +43,7 @@ def drivers():
 
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
@@ -58,6 +60,7 @@ def driver(id):
 
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'PUT':
@@ -81,6 +84,7 @@ def driver(id):
             return jsonify({'message': 'UPDATED'}), 200
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'DELETE':
@@ -95,4 +99,5 @@ def driver(id):
                 return jsonify({'error': 'Driver not found'}), 404
         except Exception as ex:
             db.session.rollback()
+            logger.exception(ex)
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
