@@ -1,24 +1,11 @@
 from flask import Blueprint, jsonify, request
-from sqlalchemy import text, select
+from sqlalchemy import select
 
 from .. import db
 from .. import models
 from .. import schemas
 
 employees_bp = Blueprint('employees_bp', __name__)
-
-
-@employees_bp.route('/')
-def index():
-    version_query = db.session.execute(text("SELECT version()")).fetchone()
-    postgres_version = version_query[0] if version_query else "Unknown"
-
-    data = {
-        'postgresql version': postgres_version,
-        'flask version': '3.0.3'
-    }
-
-    return jsonify(data)
 
 
 @employees_bp.route('/employees', methods=['GET', 'POST'])

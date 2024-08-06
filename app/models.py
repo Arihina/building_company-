@@ -42,7 +42,7 @@ class Client(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     phone_number: Mapped[str]
     full_name: Mapped[str]
-    organization_name: Mapped[str]
+    organization_name: Mapped[str] = mapped_column(nullable=True)
 
     contract = relationship('Contract', back_populates='client')
 

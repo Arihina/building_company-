@@ -13,8 +13,11 @@ db = SQLAlchemy(app)
 
 with app.app_context():
     from .routes.employees import employees_bp
+    from .routes.clients import clients_bp
     from .routes.info import info_bp
 
     app.register_blueprint(employees_bp)
+    app.register_blueprint(clients_bp)
     app.register_blueprint(info_bp)
+
     from . import models
