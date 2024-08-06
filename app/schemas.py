@@ -31,3 +31,13 @@ class ProductDto(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class DriverDto(BaseModel):
+    id: int
+    phone_number: str
+    full_name: str
+    car_type: str
+
+    class Config:
+        from_attributes = True
