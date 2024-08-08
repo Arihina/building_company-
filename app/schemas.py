@@ -41,3 +41,14 @@ class DriverDto(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class WarehouseDto(BaseModel):
+    id: int
+    product_id: int
+    product_name: str
+    quantity: int
+    address: str
+
+    class Config:
+        from_attributes = True
