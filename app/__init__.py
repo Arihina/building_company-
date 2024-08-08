@@ -18,8 +18,10 @@ db = SQLAlchemy(app)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 logger_config = os.path.join(current_dir, 'logger.config')
+
 with open(logger_config) as file:
     cfg = json.load(file)
+
 logging.config.dictConfig(cfg)
 logger = getLogger()
 
