@@ -10,6 +10,7 @@ drivers_bp = Blueprint('drivers_bp', __name__)
 
 @drivers_bp.route('/drivers', methods=['GET', 'POST'])
 def drivers():
+    logger.debug(f'{request.method} /drivers')
     if request.method == 'GET':
         try:
             query = (
@@ -49,6 +50,7 @@ def drivers():
 
 @drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def driver(id):
+    logger.debug(f'{request.method} /drivers/{id}')
     if request.method == 'GET':
         try:
             driver = models.Driver.query.get(id)

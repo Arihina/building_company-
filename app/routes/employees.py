@@ -10,6 +10,7 @@ employees_bp = Blueprint('employees_bp', __name__)
 
 @employees_bp.route('/employees', methods=['GET', 'POST'])
 def employees():
+    logger.debug(f'{request.method} /employees')
     if request.method == 'GET':
         try:
             query = (
@@ -50,6 +51,7 @@ def employees():
 
 @employees_bp.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def employee(id):
+    logger.debug(f'{request.method} /employees/{id}')
     if request.method == 'GET':
         try:
             employee = models.Employee.query.get(id)

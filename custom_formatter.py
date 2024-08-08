@@ -22,4 +22,5 @@ class CustomFormatter(logging.Formatter):
             record.msg = f"{self.YELLOW}{record.msg}{self.RESET}"
         elif levelname == "DEBUG":
             record.levelname = f"{self.BLUE}{levelname}{self.RESET}"
+            record.msg = f"{self.BLUE}{record.msg}{self.RESET}"
         return super().format(record)

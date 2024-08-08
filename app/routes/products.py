@@ -10,6 +10,7 @@ products_bp = Blueprint('products_bp', __name__)
 
 @products_bp.route('/products', methods=['GET', 'POST'])
 def products():
+    logger.debug(f'{request.method} /products')
     if request.method == 'GET':
         try:
             query = (
@@ -50,6 +51,7 @@ def products():
 
 @products_bp.route('/products/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def product(id):
+    logger.debug(f'{request.method} /products/{id}')
     if request.method == 'GET':
         try:
             product = models.Product.query.get(id)

@@ -10,6 +10,7 @@ warehouses_bp = Blueprint('warehouses_bp', __name__)
 
 @warehouses_bp.route('/warehouses', methods=['GET', 'POST'])
 def warehouses():
+    logger.debug(f'{request.method} /warehouses')
     if request.method == 'GET':
         try:
             query = (
@@ -49,6 +50,7 @@ def warehouses():
 
 @warehouses_bp.route('/warehouses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def warehouse(id):
+    logger.debug(f'{request.method} /warehouses/{id}')
     if request.method == 'GET':
         try:
             warehouse = models.Warehouse.query.get(id)

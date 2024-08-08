@@ -10,6 +10,7 @@ clients_bp = Blueprint('clients_bp', __name__)
 
 @clients_bp.route('/clients', methods=['GET', 'POST'])
 def clients():
+    logger.debug(f'{request.method} /clients')
     if request.method == 'GET':
         try:
             query = (
@@ -49,6 +50,7 @@ def clients():
 
 @clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def client(id):
+    logger.debug(f'{request.method} /clients/{id}')
     if request.method == 'GET':
         try:
             client = models.Client.query.get(id)
