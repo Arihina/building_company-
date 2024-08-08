@@ -30,12 +30,14 @@ with app.app_context():
     from .routes.clients import clients_bp
     from .routes.products import products_bp
     from .routes.drivers import drivers_bp
+    from .routes.warehouses import warehouses_bp
     from .routes.info import info_bp
 
     app.register_blueprint(employees_bp)
     app.register_blueprint(clients_bp)
     app.register_blueprint(products_bp)
     app.register_blueprint(drivers_bp)
+    app.register_blueprint(warehouses_bp)
     app.register_blueprint(info_bp)
 
     from . import models

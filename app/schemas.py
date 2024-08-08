@@ -46,7 +46,6 @@ class DriverDto(BaseModel):
 class WarehouseDto(BaseModel):
     id: int
     product_id: int
-    product_name: str
     quantity: int
     address: str
 
