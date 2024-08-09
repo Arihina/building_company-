@@ -64,3 +64,13 @@ class ConsistDto(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ContractDto(BaseModel):
+    id: int
+    contract_consist_id: int
+    client_id: int
+    employee_id: int
+
+    class Config:
+        from_attributes = True
