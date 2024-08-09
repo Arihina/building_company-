@@ -1,3 +1,5 @@
+import datetime
+
 from pydantic import BaseModel
 
 
@@ -48,6 +50,17 @@ class WarehouseDto(BaseModel):
     product_id: int
     quantity: int
     address: str
+
+    class Config:
+        from_attributes = True
+
+
+class ConsistDto(BaseModel):
+    id: int
+    product_id: int
+    data: datetime.datetime
+    order_amount: float
+    account_number: str
 
     class Config:
         from_attributes = True
