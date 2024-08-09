@@ -4,25 +4,28 @@ import unittest
 import requests
 
 
-class ClientTestCase(unittest.TestCase):
-    BASE_URL = 'http://127.0.0.1:5000/consists'
+class DriverTestCase(unittest.TestCase):
+    BASE_URL = 'http://127.0.0.1:5000/orders'
 
-    def test_get_consist(self):
-        consist_id = 1
-        url = f'{self.BASE_URL}/{consist_id}'
+    def test_get_order(self):
+        order_id = 4
+        url = f'{self.BASE_URL}/{order_id}'
 
         response = requests.get(url)
         self.assertEqual(response.status_code, 200)
 
         response_data = response.json()
-        self.assertIn('consist', response_data)
-        consist = response_data['consist']
-        self.assertIn('product_id', consist)
-        self.assertIn('order_amount', consist)
-        self.assertIn('account_number', consist)
-        self.assertIn('data', consist)
+        self.assertIn('order', response_data)
+        order = response_data['order']
+        self.assertIn('contract_id', order)
+        self.assertIn('warehouse_id', order)
+        self.assertIn('delivery_address', order)
+        self.assertIn('driver_id', order)
+        self.assertIn('prepayment', order)
+        self.assertIn('product_volume', order)
+        self.assertIn('status', order)
 
-    def test_get_consists(self):
+    def test_get_orders(self):
         url = self.BASE_URL
 
         response = requests.get(url)
@@ -31,14 +34,17 @@ class ClientTestCase(unittest.TestCase):
         response_data = response.json()
         self.assertIsInstance(response_data, list)
 
-    def test_post_consist(self):
+    def test_post_order(self):
         url = self.BASE_URL
         headers = {'Content-Type': 'application/json'}
         data = {
-            'product_id': 12,
-            'order_amount': 15000.0,
-            'account_number': '40529075171039588888',
-            'data': '2024-09-09 16:00:00'
+            'contract_id': 24,
+            'warehouse_id': 1,
+            'delivery_address': 'test',
+            'driver_id': 3,
+            'prepayment': 10000.,
+            'product_volume': 15,
+            'status': False
         }
 
         response = requests.post(url, headers=headers, data=json.dumps(data))
@@ -47,12 +53,12 @@ class ClientTestCase(unittest.TestCase):
         response_data = response.json()
         self.assertEqual(response_data['message'], 'CREATED')
 
-    def test_put_consist(self):
-        client_id = 23
-        url = f'{self.BASE_URL}/{client_id}'
+    def test_put_order(self):
+        order_id = 24
+        url = f'{self.BASE_URL}/{order_id}'
         headers = {'Content-Type': 'application/json'}
         data = {
-            'data': '2024-09-09 16:30:00'
+            'delivery_address': 'not test address'
         }
 
         response = requests.put(url, headers=headers, data=json.dumps(data))
@@ -62,15 +68,15 @@ class ClientTestCase(unittest.TestCase):
         self.assertEqual(response_data['message'], 'UPDATED')
 
     def test_no_found(self):
-        consist_id = 500
-        url = f'{self.BASE_URL}/{consist_id}'
+        order_id = 500
+        url = f'{self.BASE_URL}/{order_id}'
 
         response = requests.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_del_consist(self):
-        consist_id = 23
-        url = f'{self.BASE_URL}/{consist_id}'
+    def test_del_order(self):
+        order_id = 24
+        url = f'{self.BASE_URL}/{order_id}'
 
         response = requests.delete(url)
         self.assertEqual(response.status_code, 204)
