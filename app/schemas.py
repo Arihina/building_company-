@@ -74,3 +74,17 @@ class ContractDto(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class OrdersDto(BaseModel):
+    id: int
+    contract_id: int
+    warehouse_id: int
+    delivery_address: str
+    driver_id: int
+    prepayment: float
+    product_volume: int
+    status: bool
+
+    class Config:
+        from_attributes = True
