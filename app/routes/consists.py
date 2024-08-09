@@ -59,7 +59,7 @@ def consist(id):
                 return jsonify({'error': 'Consist not found'}), 404
 
             consist_dto = schemas.ConsistDto.from_orm(consist).dict()
-            return jsonify({"client": consist_dto}), 200
+            return jsonify({"consist": consist_dto}), 200
 
         except Exception as ex:
             db.session.rollback()
