@@ -14,7 +14,7 @@ class CustomFormatter(logging.Formatter):
 
     def format(self, record):
         levelname = record.levelname
-        if levelname == "EXCEPTION":
+        if levelname == "EXCEPTION" or levelname == "ERROR":
             record.levelname = f"{self.PURPLE}{levelname}{self.RESET}"
             record.msg = f"{self.PURPLE}{record.msg}{self.RESET}"
         elif levelname == "INFO":
