@@ -40,5 +40,20 @@ def processing_orders(id):
 def completes_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders/completes')
     if request.method == 'GET':
-        print(CompleteOrdersService.get_orders_by_manager_id(id))
-        return 'OK', 200
+        completes_orders = CompleteOrdersService.get_orders_by_manager_id(id)
+
+        completes_orders_dto = [
+            schemas.CompletesOrderDto(
+                client_name=order.client_name,
+                driver_name=order.driver_name,
+                product_name=order.product_name,
+                product_volume=order.product_volume,
+                data=order.data,
+                deliver_address=order.delivery_address,
+                warehouse_address=order.warehouse_address,
+                order_amount=order.order_amount
+            ).dict()
+            for order in completes_orders
+        ]
+
+        return jsonify(completes_orders_dto), 200
