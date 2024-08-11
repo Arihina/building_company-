@@ -97,3 +97,14 @@ class ManagerDto(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class CompletesOrderDto(BaseModel):
+    client_name: str
+    driver_name: str
+    product_name: str
+    product_volume: int
+    data: datetime.datetime
+    deliver_address: str
+    warehouse_address: str
+    order_amount: float
