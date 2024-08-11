@@ -88,3 +88,12 @@ class OrdersDto(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ManagerDto(BaseModel):
+    phone_number: str
+    full_name: str
+    email: str
+
+    class Config:
+        from_attributes = True

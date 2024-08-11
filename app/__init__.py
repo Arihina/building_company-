@@ -34,6 +34,7 @@ with app.app_context():
     from .routes.consists import consists_bp
     from .routes.contracts import contracts_bp
     from .routes.orders import orders_bp
+    from .routes.managers import managers_bp
     from .routes.info import info_bp
 
     app.register_blueprint(employees_bp)
@@ -44,6 +45,7 @@ with app.app_context():
     app.register_blueprint(consists_bp)
     app.register_blueprint(contracts_bp)
     app.register_blueprint(orders_bp)
+    app.register_blueprint(managers_bp)
     app.register_blueprint(info_bp)
 
     from . import models
