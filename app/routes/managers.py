@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.clients import ClientService
 from ..services.orders import CompleteOrdersService
 
 managers_bp = Blueprint('managers_bp', __name__)
@@ -57,3 +58,21 @@ def completes_orders(id):
         ]
 
         return jsonify(completes_orders_dto), 200
+
+
+@managers_bp.route('/managers/<int:id>/clients', methods=['GET'])
+def managers_clients(id):
+    logger.debug(f'{request.method} /managers/{id}/clients')
+    if request.method == 'GET':
+        clients = ClientService.get_join_clients(id)
+
+        clients_dto = [
+            schemas.ClientJoinDto(
+                full_name=client.full_name,
+                phone_number=client.phone_number,
+                organization_name=client.organization_name
+            ).dict()
+            for client in clients
+        ]
+
+        return jsonify(clients_dto), 200

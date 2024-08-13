@@ -108,3 +108,9 @@ class CompletesOrderDto(BaseModel):
     deliver_address: str
     warehouse_address: str
     order_amount: float
+
+
+class ClientJoinDto(BaseModel):
+    full_name: str
+    phone_number: str
+    organization_name: str | None

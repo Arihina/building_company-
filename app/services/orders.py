@@ -7,7 +7,7 @@ from .. import models
 
 class CompleteOrdersService:
     @staticmethod
-    def get_orders_by_manager_id(manager_id: int):
+    def get_orders_by_manager_id(manager_id: int) -> list[models.Orders]:
         employee_alias = aliased(models.Employee)
         client_alias = aliased(models.Client)
         contract_alias = aliased(models.Contract)

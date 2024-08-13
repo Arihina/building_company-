@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
 from .. import db
-from ..models import Client
+from ..models import Client, Contract, Employee
 from ..schemas import ClientDto
 
 
@@ -67,5 +67,12 @@ class ClientService:
             return True
 
     @staticmethod
-    def get_join_clients(manager_id: int):
-        pass
+    def get_join_clients(manager_id: int) -> list[Client]:
+        query = (((select(Client.full_name, Client.phone_number, Client.organization_name)
+                 .join(Contract, Client.id == Contract.client_id))
+                 .join(Employee, Employee.id == Contract.employee_id))
+                 .where(Employee.id == manager_id).distinct())
+
+        results = db.session.execute(query).all()
+
+        return results
