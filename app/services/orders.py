@@ -5,9 +5,9 @@ from .. import db
 from .. import models
 
 
-class CompleteOrdersService:
+class OrdersService:
     @staticmethod
-    def get_orders_by_manager_id(manager_id: int) -> list[models.Orders]:
+    def get_orders_by_manager_id(manager_id: int, status: bool) -> list[models.Orders]:
         employee_alias = aliased(models.Employee)
         client_alias = aliased(models.Client)
         contract_alias = aliased(models.Contract)
@@ -37,7 +37,7 @@ class CompleteOrdersService:
             .join(warehouse_alias, orders_alias.warehouse_id == warehouse_alias.id)
             .where(
                 employee_alias.id == manager_id,
-                orders_alias.status.is_(True)
+                orders_alias.status.is_(status)
             )
         )
 

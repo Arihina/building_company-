@@ -2,5 +2,5 @@
 
 
 # Backend: python - flask + sqlalchemy
-# Data forma - json
+# Data format - json
 # Frontend: - 

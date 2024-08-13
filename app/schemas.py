@@ -99,7 +99,7 @@ class ManagerDto(BaseModel):
         from_attributes = True
 
 
-class CompletesOrderDto(BaseModel):
+class OrderDto(BaseModel):
     client_name: str
     driver_name: str
     product_name: str

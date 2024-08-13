@@ -31,6 +31,7 @@ def clients():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
+# TODO: check user role
 @clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def client(id):
     logger.debug(f'{request.method} /clients/{id}')

@@ -8,6 +8,7 @@ from .. import schemas
 consists_bp = Blueprint('consists_bp', __name__)
 
 
+# TODO: check user role
 @consists_bp.route('/consists', methods=['GET', 'POST'])
 def consists():
     logger.debug(f'{request.method} /consists')
@@ -49,6 +50,7 @@ def consists():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
+# TODO: check user role
 @consists_bp.route('/consists/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def consist(id):
     logger.debug(f'{request.method} /consists/{id}')

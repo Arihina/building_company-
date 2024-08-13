@@ -8,6 +8,7 @@ from .. import schemas
 contracts_bp = Blueprint('contracts_bp', __name__)
 
 
+# TODO: check user role
 @contracts_bp.route('/contracts', methods=['GET', 'POST'])
 def contracts():
     logger.debug(f'{request.method} /contracts')
@@ -48,6 +49,7 @@ def contracts():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
+# TODO: check user role
 @contracts_bp.route('/contracts/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def contract(id):
     logger.debug(f'{request.method} /contracts/{id}')

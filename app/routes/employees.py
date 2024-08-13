@@ -8,6 +8,7 @@ from .. import schemas
 employees_bp = Blueprint('employees_bp', __name__)
 
 
+# TODO: check user role
 @employees_bp.route('/employees', methods=['GET', 'POST'])
 def employees():
     logger.debug(f'{request.method} /employees')
@@ -49,6 +50,7 @@ def employees():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
+# TODO: check user role
 @employees_bp.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def employee(id):
     logger.debug(f'{request.method} /employees/{id}')

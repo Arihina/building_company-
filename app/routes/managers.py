@@ -4,11 +4,12 @@ from .. import db, logger
 from .. import models
 from .. import schemas
 from ..services.clients import ClientService
-from ..services.orders import CompleteOrdersService
+from ..services.orders import OrdersService
 
 managers_bp = Blueprint('managers_bp', __name__)
 
 
+# TODO: check user role
 @managers_bp.route('/managers/<int:id>', methods=['GET'])
 def profile(id):
     logger.debug(f'{request.method} /managers/{id}')
@@ -31,20 +32,16 @@ def profile(id):
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
+# TODO: check user role
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
 def processing_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders')
     # TODO: only orders with status false
-
-
-@managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])
-def completes_orders(id):
-    logger.debug(f'{request.method} /managers/{id}/orders/completes')
     if request.method == 'GET':
-        completes_orders = CompleteOrdersService.get_orders_by_manager_id(id)
+        incomplete_orders = OrdersService.get_orders_by_manager_id(id, False)
 
-        completes_orders_dto = [
-            schemas.CompletesOrderDto(
+        incomplete_orders_dto = [
+            schemas.OrderDto(
                 client_name=order.client_name,
                 driver_name=order.driver_name,
                 product_name=order.product_name,
@@ -54,12 +51,41 @@ def completes_orders(id):
                 warehouse_address=order.warehouse_address,
                 order_amount=order.order_amount
             ).dict()
-            for order in completes_orders
+            for order in incomplete_orders
         ]
 
-        return jsonify(completes_orders_dto), 200
+        return jsonify(incomplete_orders_dto), 200
+
+    if request.method == 'POST':
+        pass
+    if request.method == 'PUT':
+        pass
 
 
+@managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])
+def completes_orders(id):
+    logger.debug(f'{request.method} /managers/{id}/orders/completes')
+    if request.method == 'GET':
+        complete_orders = OrdersService.get_orders_by_manager_id(id, True)
+
+        complete_orders_dto = [
+            schemas.OrderDto(
+                client_name=order.client_name,
+                driver_name=order.driver_name,
+                product_name=order.product_name,
+                product_volume=order.product_volume,
+                data=order.data,
+                deliver_address=order.delivery_address,
+                warehouse_address=order.warehouse_address,
+                order_amount=order.order_amount
+            ).dict()
+            for order in complete_orders
+        ]
+
+        return jsonify(complete_orders_dto), 200
+
+
+# TODO: check user role
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET'])
 def managers_clients(id):
     logger.debug(f'{request.method} /managers/{id}/clients')
