@@ -8,7 +8,7 @@ class ClientTestCase(unittest.TestCase):
     BASE_URL = 'http://127.0.0.1:5000/clients'
 
     def test_get_client(self):
-        client_id = 26
+        client_id = 1
         url = f'{self.BASE_URL}/{client_id}'
 
         response = requests.get(url)
@@ -46,7 +46,7 @@ class ClientTestCase(unittest.TestCase):
         self.assertEqual(response_data['message'], 'CREATED')
 
     def test_put_client(self):
-        client_id = 26
+        client_id = 27
         url = f'{self.BASE_URL}/{client_id}'
         headers = {'Content-Type': 'application/json'}
         data = {
@@ -67,7 +67,7 @@ class ClientTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_del_client(self):
-        client_id = 26
+        client_id = 27
         url = f'{self.BASE_URL}/{client_id}'
 
         response = requests.delete(url)
