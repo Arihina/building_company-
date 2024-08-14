@@ -63,7 +63,10 @@ def processing_orders(id):
 
     if request.method == 'POST':
         try:
-            order_dto = request.get_json()
+            order_dto = schemas.NewOrderDto.model_validate(request.get_json())
+            OrdersService.add_order(id, order_dto)
+
+            return jsonify({'message': 'CREATED'}), 201
         except ValueError as ex:
             db.session.rollback()
             logger.exception(ex)
@@ -74,7 +77,12 @@ def processing_orders(id):
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'PUT':
-        pass
+        try:
+            pass
+        except Exception as ex:
+            db.session.rollback()
+            logger.exception(ex)
+            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
 @managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])

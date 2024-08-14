@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 
 from .clients import ClientService
+from .drivers import DriverService
 from .products import ProductService
 from .. import db
 from .. import models
@@ -54,11 +55,15 @@ class OrdersService:
             raise ValueError('No data about the product')
         if new_order.client_id is None and new_order.client_name is None:
             raise ValueError('No data about the client')
+        if new_order.driver_id is None and new_order.driver_name is None:
+            raise ValueError('No data about the driver')
 
         if new_order.product_id is None:
             new_order.product_id = ProductService.get_product_by_name(new_order.product_name).id
         if new_order.client_id is None:
             new_order.client_id = ClientService.get_client_by_name(new_order.client_name).id
+        if new_order.driver_id is None:
+            new_order.driver_id = DriverService.get_driver_by_name(new_order.driver_name).id
 
         consist = models.Consist(
             product_id=new_order.product_id,
@@ -71,12 +76,12 @@ class OrdersService:
         contract = models.Contract(
             employee_id=manager_id,
             client_id=new_order.client_id,
-            contract_consist_id=consist.id
+            consist=consist
         )
         db.session.add(contract)
 
         order = models.Orders(
-            contract_id=contract.id,
+            contract=contract,
             warehouse_id=new_order.warehouse_id,
             delivery_address=new_order.delivery_address,
             driver_id=new_order.driver_id,
