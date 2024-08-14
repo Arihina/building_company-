@@ -114,3 +114,19 @@ class ClientJoinDto(BaseModel):
     full_name: str
     phone_number: str
     organization_name: str | None
+
+
+class NewOrderDto(BaseModel):
+    client_name: str | None
+    product_name: str | None
+    driver_name: str | None
+    client_id: int | None
+    product_id: int | None
+    driver_id: int | None
+    warehouse_id: int
+    delivery_address: str
+    data: datetime.datetime
+    order_amount: float
+    prepayment: float
+    account_number: str
+    product_volume: int
