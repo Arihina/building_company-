@@ -16,7 +16,7 @@ class ClientService:
         return Client.query().select().where(Client.full_name == name)
 
     @staticmethod
-    def set_client(client_dto: ClientDto):
+    def add_client(client_dto: ClientDto):
         client = Client(
             full_name=client_dto['full_name'],
             phone_number=client_dto['phone_number'],
