@@ -36,7 +36,6 @@ def profile(id):
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
 def processing_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders')
-    # TODO: only orders with status false
     if request.method == 'GET':
         try:
             incomplete_orders = OrdersService.get_orders_by_manager_id(id, False)
@@ -80,11 +79,12 @@ def processing_orders(id):
     if request.method == 'PUT':
         try:
             order_dto = schemas.OrderDto.model_validate(request.get_json())
+            # TODO: add verification of the order belonging to the manager
             order = OrdersService.get_order_by_id(order_dto.id)
             if not order:
                 return jsonify({'error': 'Order not found'}), 404
 
-            OrdersService.update_order(order_dto)
+            OrdersService.update_order(order_dto, order_dto.id)
             return jsonify({'message': 'UPDATED'}), 200
 
         except Exception as ex:
