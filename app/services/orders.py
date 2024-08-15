@@ -24,6 +24,7 @@ class OrdersService:
         query = (
             select(
                 client_alias.full_name.label("client_name"),
+                orders_alias.id,
                 orders_alias.delivery_address,
                 orders_alias.product_volume,
                 product_alias.name.label("product_name"),
@@ -91,3 +92,7 @@ class OrdersService:
         )
         db.session.add(order)
         db.session.commit()
+
+    @staticmethod
+    def get_order_by_id(id: int) -> models.Orders:
+        return models.Orders.query.get(id)

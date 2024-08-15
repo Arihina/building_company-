@@ -43,6 +43,7 @@ def processing_orders(id):
 
             incomplete_orders_dto = [
                 schemas.OrderDto(
+                    id=order.id,
                     client_name=order.client_name,
                     driver_name=order.driver_name,
                     product_name=order.product_name,
@@ -79,6 +80,7 @@ def processing_orders(id):
     if request.method == 'PUT':
         try:
             pass
+            # order = OrdersService.get_order_by_id()
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
@@ -94,6 +96,7 @@ def completes_orders(id):
 
             complete_orders_dto = [
                 schemas.OrderDto(
+                    id=order.id,
                     client_name=order.client_name,
                     driver_name=order.driver_name,
                     product_name=order.product_name,

@@ -7,6 +7,7 @@ from ..services.clients import ClientService
 clients_bp = Blueprint('clients_bp', __name__)
 
 
+# TODO: check user role
 @clients_bp.route('/clients', methods=['GET', 'POST'])
 def clients():
     logger.debug(f'{request.method} /clients')

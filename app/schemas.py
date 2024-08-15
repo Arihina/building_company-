@@ -100,6 +100,7 @@ class ManagerDto(BaseModel):
 
 
 class OrderDto(BaseModel):
+    id: int
     client_name: str
     driver_name: str
     product_name: str
