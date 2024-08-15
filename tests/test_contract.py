@@ -4,7 +4,7 @@ import unittest
 import requests
 
 
-class ClientTestCase(unittest.TestCase):
+class ContractTestCase(unittest.TestCase):
     BASE_URL = 'http://127.0.0.1:5000/contracts'
 
     def test_get_contract(self):

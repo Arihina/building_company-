@@ -4,7 +4,7 @@ import unittest
 import requests
 
 
-class DriverTestCase(unittest.TestCase):
+class OrdersTestCase(unittest.TestCase):
     BASE_URL = 'http://127.0.0.1:5000/orders'
 
     def test_get_order(self):
@@ -54,7 +54,7 @@ class DriverTestCase(unittest.TestCase):
         self.assertEqual(response_data['message'], 'CREATED')
 
     def test_put_order(self):
-        order_id = 24
+        order_id = 25
         url = f'{self.BASE_URL}/{order_id}'
         headers = {'Content-Type': 'application/json'}
         data = {
