@@ -6,7 +6,7 @@ from .drivers import DriverService
 from .products import ProductService
 from .. import db
 from .. import models
-from ..schemas import NewOrderDto
+from ..schemas import NewOrderDto, OrderDto
 
 
 class OrdersService:
@@ -96,3 +96,24 @@ class OrdersService:
     @staticmethod
     def get_order_by_id(id: int) -> models.Orders:
         return models.Orders.query.get(id)
+
+    @staticmethod
+    def update_order(order_dto: OrderDto) -> None:
+        order = models.Orders.query.get(order_dto.id)
+
+        if 'contract_id' in order_dto:
+            order.contract_id = order_dto.contract_id
+        if 'warehouse_id' in order_dto:
+            order.warehouse_id = order_dto.warehouse_id
+        if 'delivery_address' in order_dto:
+            order.delivery_address = order_dto.delivery_address
+        if 'driver_id' in order_dto:
+            order.driver_id = order_dto.driver_id
+        if 'prepayment' in order_dto:
+            order.prepayment = order_dto.prepayment
+        if 'product_volume' in order_dto:
+            order.product_volume = order_dto.product_volume
+        if 'status' in order_dto:
+            order.status = order_dto.status
+
+        db.session.commit()

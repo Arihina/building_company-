@@ -79,8 +79,14 @@ def processing_orders(id):
 
     if request.method == 'PUT':
         try:
-            pass
-            # order = OrdersService.get_order_by_id()
+            order_dto = schemas.OrderDto.model_validate(request.get_json())
+            order = OrdersService.get_order_by_id(order_dto.id)
+            if not order:
+                return jsonify({'error': 'Order not found'}), 404
+
+            OrdersService.update_order(order_dto)
+            return jsonify({'message': 'UPDATED'}), 200
+
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)

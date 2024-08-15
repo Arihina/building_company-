@@ -8,6 +8,8 @@ from .. import schemas
 orders_bp = Blueprint('orders_bp', __name__)
 
 
+# TODO: refactor with using services layer
+
 # TODO: check user role
 @orders_bp.route('/orders', methods=['GET', 'POST'])
 def orders():
