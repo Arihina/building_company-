@@ -114,7 +114,7 @@ def completes_orders(id):
 
 
 # TODO: check user role
-@managers_bp.route('/managers/<int:id>/clients', methods=['GET'])
+@managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])
 def managers_clients(id):
     logger.debug(f'{request.method} /managers/{id}/clients')
     if request.method == 'GET':
@@ -131,6 +131,16 @@ def managers_clients(id):
             ]
 
             return jsonify(clients_dto), 200
+        except Exception as ex:
+            db.session.rollback()
+            logger.exception(ex)
+            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+
+    if request.method == 'POST':
+        try:
+            ClientService.add_client(request.get_json())
+
+            return jsonify({'message': 'CREATED'}), 201
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)

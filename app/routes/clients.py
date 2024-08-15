@@ -21,7 +21,7 @@ def clients():
 
     if request.method == 'POST':
         try:
-            ClientService.set_client(request.get_json())
+            ClientService.add_client(request.get_json())
 
             return jsonify({'message': 'CREATED'}), 201
 
