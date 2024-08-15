@@ -78,14 +78,18 @@ def processing_orders(id):
 
     if request.method == 'PUT':
         try:
-            order_dto = schemas.OrderDto.model_validate(request.get_json())
-            # TODO: add verification of the order belonging to the manager
-            order = OrdersService.get_order_by_id(order_dto.id)
-            if not order:
-                return jsonify({'error': 'Order not found'}), 404
+            order_dto = request.get_json()
+            if order_dto['id']:
+                # TODO: add verification of the order belonging to the manager
+                order = OrdersService.get_order_by_id(order_dto['id'])
+                if not order:
+                    return jsonify({'error': 'Order not found'}), 404
 
-            OrdersService.update_order(order_dto, order_dto.id)
-            return jsonify({'message': 'UPDATED'}), 200
+                OrdersService.update_order(order_dto, order_dto['id'])
+                return jsonify({'message': 'UPDATED'}), 200
+            else:
+                db.session.rollback()
+                return jsonify({'error': 'Bad Request'}), 400
 
         except Exception as ex:
             db.session.rollback()
