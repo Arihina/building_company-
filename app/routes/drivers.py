@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
-from sqlalchemy import select
 
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.drivers import DriverService
 
 drivers_bp = Blueprint('drivers_bp', __name__)
 
@@ -14,15 +14,7 @@ def drivers():
     logger.debug(f'{request.method} /drivers')
     if request.method == 'GET':
         try:
-            query = (
-                select(models.Driver)
-            )
-            drivers = db.session.execute(query).scalars().all()
-            drivers_dto = [
-                schemas.DriverDto.from_orm(driver).dict() for driver in drivers
-            ]
-
-            return jsonify(drivers_dto), 200
+            return jsonify(DriverService.get_drivers()), 200
 
         except Exception as ex:
             db.session.rollback()
