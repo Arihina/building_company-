@@ -4,6 +4,7 @@ from .. import db, logger
 from .. import models
 from .. import schemas
 from ..services.clients import ClientService
+from ..services.drivers import DriverService
 from ..services.orders import OrdersService
 
 managers_bp = Blueprint('managers_bp', __name__)
@@ -154,6 +155,19 @@ def managers_clients(id):
             ClientService.add_client(request.get_json())
 
             return jsonify({'message': 'CREATED'}), 201
+        except Exception as ex:
+            db.session.rollback()
+            logger.exception(ex)
+            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+
+
+# TODO: check user role
+@managers_bp.route('/managers/<int:id>/drivers', methods=['GET'])
+def managers_drivers(id):
+    logger.debug(f'{request.method} /managers/{id}/drivers')
+    if request.method == 'GET':
+        try:
+            return jsonify(DriverService.get_drivers()), 200
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
