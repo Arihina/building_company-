@@ -34,6 +34,18 @@ function deleteEmpl(id) {
     });
 }
 
+function deleteCons(id) {
+  fetch(id, {
+    method: 'DELETE'
+  }).then(response => {
+        if (response.status == 204) {
+            window.location.replace("/consists");
+        } else {
+            alert('Ошибка при удалении');
+        }
+    });
+}
+
 function updateClient(event) {
     event.preventDefault();
     fetch(window.location.href, {
@@ -90,6 +102,29 @@ function updateEmpl(event) {
             phone_number: document.getElementById('phone_number').value,
             email: document.getElementById('email').value,
             post: document.getElementById('post').value
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Запись обновлена');
+            window.location.reload();
+        } else {
+            alert('Ошибка при обновлении записи');
+        }
+    });
+}
+
+function updateCons(event) {
+    event.preventDefault();
+    fetch(window.location.href, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            product_id: document.getElementById('product_id').value,
+            data: document.getElementById('data').value,
+            order_amount: document.getElementById('order_amount').value,
+            account_number: document.getElementById('account_number').value
         })
     }).then(response => {
         if (response.ok) {

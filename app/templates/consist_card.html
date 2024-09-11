@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Содержание контракта {{ cons.id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+     <script src="../static/js/scripts.js" defer></script>
+</head>
+<body>
+<h1>Содержание контракта {{ cons.id }}</h1>
+<div class="container">
+    <div class="form-card">
+        <form>
+            <div class="field">
+                <label for="product_id">Номер продукта:</label>
+                <input type="text" id="product_id" name="product_id" value="{{cons.product_id}}" required>
+            </div>
+            <div class="field">
+                <label for="data">Дата:</label>
+                <input type="text" id="data" name="data" value="{{cons.data}}" required>
+            </div>
+            <div class="field">
+                <label for="order_amount">Сумма заказа:</label>
+                <input type="text" id="order_amount" name="order_amount" value="{{ cons.order_amount }}">
+            </div>
+            <div class="field">
+                <label for="account_number">Номер счёта:</label>
+                <input type="text" id="account_number" name="account_number" value="{{ cons.account_number }}">
+            </div>
+            <div class="form-actions">
+                <button onclick="updateCons(event)">Изменить</button>
+            </div>
+        </form>
+        <button onclick="deleteCons({{cons.id}})">Удалить</button>
+    </div>
+</div>
+</body>
+</html>

@@ -165,6 +165,10 @@ form {
   input[name="car_type"],
   input[name="post"],
   input[name="email"],
+  input[name="product_id"],
+  input[name="data"],
+  input[name="order_amount"],
+  input[name="account_number"],
 textarea {
     background-color: #333;
     border: none;
