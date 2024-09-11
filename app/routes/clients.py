@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 
 from .. import db, logger
 from .. import schemas
@@ -13,7 +13,8 @@ def clients():
 
     if request.method == 'GET':
         try:
-            return jsonify(ClientService.get_clients()), 200
+            clients = ClientService.get_clients()
+            return render_template('clients.html', clients=clients), 200
 
         except Exception as ex:
             logger.exception(ex)
