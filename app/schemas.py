@@ -18,7 +18,7 @@ class ClientDto(BaseModel):
     id: int
     phone_number: str
     full_name: str
-    organization_name: str
+    organization_name: str | None
 
     class Config:
         from_attributes = True
