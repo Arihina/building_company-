@@ -8,7 +8,6 @@ from .. import schemas
 warehouses_bp = Blueprint('warehouses_bp', __name__)
 
 
-# TODO: check user role
 @warehouses_bp.route('/warehouses', methods=['GET', 'POST'])
 def warehouses():
     logger.debug(f'{request.method} /warehouses')
@@ -49,7 +48,6 @@ def warehouses():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-# TODO: check user role
 @warehouses_bp.route('/warehouses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def warehouse(id):
     logger.debug(f'{request.method} /warehouses/{id}')

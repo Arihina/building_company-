@@ -8,7 +8,6 @@ from ..services.drivers import DriverService
 drivers_bp = Blueprint('drivers_bp', __name__)
 
 
-# TODO: check user role
 @drivers_bp.route('/drivers', methods=['GET', 'POST'])
 def drivers():
     logger.debug(f'{request.method} /drivers')
@@ -41,7 +40,6 @@ def drivers():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-# TODO: check user role
 @drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def driver(id):
     logger.debug(f'{request.method} /drivers/{id}')

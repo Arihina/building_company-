@@ -7,7 +7,6 @@ from ..services.clients import ClientService
 clients_bp = Blueprint('clients_bp', __name__)
 
 
-# TODO: check user role
 @clients_bp.route('/clients', methods=['GET', 'POST'])
 def clients():
     logger.debug(f'{request.method} /clients')
@@ -32,7 +31,6 @@ def clients():
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-# TODO: check user role
 @clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def client(id):
     logger.debug(f'{request.method} /clients/{id}')

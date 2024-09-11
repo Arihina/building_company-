@@ -10,7 +10,6 @@ from ..services.orders import OrdersService
 managers_bp = Blueprint('managers_bp', __name__)
 
 
-# TODO: check user role
 @managers_bp.route('/managers/<int:id>', methods=['GET'])
 def profile(id):
     logger.debug(f'{request.method} /managers/{id}')
@@ -33,7 +32,6 @@ def profile(id):
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-# TODO: check user role
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
 def processing_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders')
@@ -127,7 +125,6 @@ def completes_orders(id):
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-# TODO: check user role
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])
 def managers_clients(id):
     logger.debug(f'{request.method} /managers/{id}/clients')
@@ -161,7 +158,6 @@ def managers_clients(id):
             return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
 
-# TODO: check user role
 @managers_bp.route('/managers/<int:id>/drivers', methods=['GET'])
 def managers_drivers(id):
     logger.debug(f'{request.method} /managers/{id}/drivers')
