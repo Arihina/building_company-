@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-from sqlalchemy import select
 
 from .. import db, logger
 from .. import models
@@ -17,15 +16,7 @@ def orders():
     logger.debug(f'{request.method} /orders')
     if request.method == 'GET':
         try:
-            query = (
-                select(models.Orders)
-            )
-            orders = db.session.execute(query).scalars().all()
-            orders_dto = [
-                schemas.OrdersDto.from_orm(order).dict() for order in orders
-            ]
-
-            return jsonify(orders_dto), 200
+            return jsonify(OrdersService.get_orders()), 200
 
         except Exception as ex:
             db.session.rollback()
@@ -75,13 +66,11 @@ def order(id):
 
     if request.method == 'PUT':
         try:
-            order = models.Orders.query.get(id)
-
-            if not order:
-                return jsonify({'error': 'Order not found'}), 404
-
             order_dto = request.get_json()
-            OrdersService.update_order(order_dto, id)
+            status = OrdersService.update_order(order_dto, id)
+
+            if not status:
+                return jsonify({'error': 'Order not found'}), 404
 
             return jsonify({'message': 'UPDATED'}), 200
         except Exception as ex:
@@ -91,11 +80,8 @@ def order(id):
 
     if request.method == 'DELETE':
         try:
-            order = models.Orders.query.get(id)
-            if order:
-                db.session.delete(order)
-                db.session.commit()
-
+            status = OrdersService.delete_order(id)
+            if status:
                 return jsonify({'message': 'DELETED'}), 204
             else:
                 return jsonify({'error': 'Order not found'}), 404

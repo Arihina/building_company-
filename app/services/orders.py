@@ -6,10 +6,22 @@ from .drivers import DriverService
 from .products import ProductService
 from .. import db
 from .. import models
-from ..schemas import NewOrderDto
+from ..schemas import NewOrderDto, OrdersDto
 
 
 class OrdersService:
+    @staticmethod
+    def get_orders() -> list[dict]:
+        query = (
+            select(models.Orders)
+        )
+        orders = db.session.execute(query).scalars().all()
+        orders_dto = [
+            OrdersDto.from_orm(order).dict() for order in orders
+        ]
+
+        return orders_dto
+
     @staticmethod
     def get_orders_by_manager_id(manager_id: int, status: bool) -> list[models.Orders]:
         employee_alias = aliased(models.Employee)
@@ -98,23 +110,38 @@ class OrdersService:
         return models.Orders.query.get(id)
 
     @staticmethod
-    def update_order(order_dto: dict, id: int) -> None:
+    def update_order(order_dto: dict, id: int) -> bool:
         order = models.Orders.query.get(id)
-        if 'contract_id' in order_dto:
-            order.contract_id = order_dto['contract_id']
-        if 'warehouse_id' in order_dto:
-            order.warehouse_id = order_dto['warehouse_id']
-        if 'delivery_address' in order_dto:
-            order.delivery_address = order_dto['delivery_address']
-        if 'driver_id' in order_dto:
-            order.driver_id = order_dto['driver_id']
-        if 'prepayment' in order_dto:
-            order.prepayment = order_dto['prepayment']
-        if 'product_volume' in order_dto:
-            order.product_volume = order_dto['product_volume']
-        if 'status' in order_dto:
-            order.status = order_dto['status']
-        db.session.commit()
+        if order:
+            if 'contract_id' in order_dto:
+                order.contract_id = order_dto['contract_id']
+            if 'warehouse_id' in order_dto:
+                order.warehouse_id = order_dto['warehouse_id']
+            if 'delivery_address' in order_dto:
+                order.delivery_address = order_dto['delivery_address']
+            if 'driver_id' in order_dto:
+                order.driver_id = order_dto['driver_id']
+            if 'prepayment' in order_dto:
+                order.prepayment = order_dto['prepayment']
+            if 'product_volume' in order_dto:
+                order.product_volume = order_dto['product_volume']
+            if 'status' in order_dto:
+                order.status = order_dto['status']
+            db.session.commit()
+
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def delete_order(id: int) -> bool:
+        order = models.Orders.query.get(id)
+        if not order:
+            return False
+        else:
+            db.session.delete(order)
+            db.session.commit()
+            return True
 
     @staticmethod
     def get_orders_id_by_manager(manager_id: int) -> list[int]:
