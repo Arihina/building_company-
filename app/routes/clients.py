@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, abort
+from flask import Blueprint, jsonify, request, render_template, abort, flash, redirect, url_for
 
 from .. import db, logger
 from .. import schemas
@@ -13,14 +13,25 @@ def clients():
 
     if request.method == 'POST':
         try:
-            ClientService.add_client(request.get_json())
+            full_name = request.form.get('full_name')
+            phone_number = request.form.get('phone_number')
+            organization_name = request.form.get('organization_name')
 
-            return jsonify({'message': 'CREATED'}), 201
+            client_dto = {
+                'full_name': full_name,
+                'phone_number': phone_number,
+                'organization_name': organization_name if organization_name else None
+            }
+            ClientService.add_client(client_dto)
+
+            flash('Клиент добавлен успешно', 'success')
+            return redirect(url_for('clients_bp.clients'))
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            flash('Произошла ошибка.', 'error')
+            return redirect(url_for('clients_bp.clients'))
 
     try:
         clients = ClientService.get_clients()
@@ -30,7 +41,7 @@ def clients():
         return render_template('500.html'), 500
 
 
-@clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE', 'POST'])
 def client(id):
     logger.debug(f'{request.method} /clients/{id}')
     if request.method == 'GET':
@@ -42,7 +53,7 @@ def client(id):
 
             client_dto = schemas.ClientDto.from_orm(client).dict()
 
-            return jsonify({"client": client_dto}), 200
+            return render_template('client_card.html', client=client_dto), 200
 
         except Exception as ex:
             db.session.rollback()
@@ -66,6 +77,7 @@ def client(id):
         try:
             status = ClientService.delete_client(id)
             if status:
+                flash('Клиент успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
                 return render_template('404.html'), 404

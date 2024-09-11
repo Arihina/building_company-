@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиент {{ client.id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+     <script src="../static/js/scripts.js" defer></script>
+</head>
+<body>
+<h1>Клиент № {{ client.id }}</h1>
+<div class="container">
+    <div class="form-card">
+        <form>
+            <div class="field">
+                <label for="full_name">ФИО:</label>
+                <input type="text" id="full_name" name="full_name" value="{{client.full_name}}" required>
+            </div>
+            <div class="field">
+                <label for="phone_number">Номер телефона:</label>
+                <input type="text" id="phone_number" name="phone_number" value="{{client.phone_number}}" required>
+            </div>
+            <div class="field">
+                <label for="organization_name">Фирма:</label>
+                <input type="text" id="organization_name" name="organization_name"
+                       value="{{ client.organization_name if client.organization_name else 'Не указано' }}">
+            </div>
+            <div class="form-actions">
+                <button onclick="updateEntry(event)">Изменить</button>
+            </div>
+        </form>
+        <button onclick="deleteEntry({{client.id}})">Удалить</button>
+    </div>
+</div>
+</body>
+</html>
