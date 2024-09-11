@@ -3,7 +3,7 @@ import logging.config
 import os
 from logging import getLogger
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
@@ -15,6 +15,22 @@ app.config['SQLALCHEMY_DATABASE_URI'] = settings.db_url
 app.config['SECRET_KEY'] = settings.app_secret_key
 
 db = SQLAlchemy(app)
+
+
+@app.errorhandler(403)
+def forbidden_error(error):
+    return render_template('403.html'), 403
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
+
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 logger_config = os.path.join(current_dir, 'logger.config')

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template, abort
 
 from .. import db, logger
 from .. import schemas
@@ -11,15 +11,6 @@ clients_bp = Blueprint('clients_bp', __name__)
 def clients():
     logger.debug(f'{request.method} /clients')
 
-    if request.method == 'GET':
-        try:
-            clients = ClientService.get_clients()
-            return render_template('clients.html', clients=clients), 200
-
-        except Exception as ex:
-            logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
-
     if request.method == 'POST':
         try:
             ClientService.add_client(request.get_json())
@@ -29,7 +20,14 @@ def clients():
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
+
+    try:
+        clients = ClientService.get_clients()
+        return render_template('clients.html', clients=clients), 200
+    except Exception as ex:
+        logger.exception(ex)
+        return render_template('500.html'), 500
 
 
 @clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -40,7 +38,7 @@ def client(id):
             client = ClientService.get_client_by_id(id)
 
             if not client:
-                return jsonify({'error': 'Client not found'}), 404
+                return render_template('404.html'), 404
 
             client_dto = schemas.ClientDto.from_orm(client).dict()
 
@@ -49,7 +47,7 @@ def client(id):
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
@@ -57,12 +55,12 @@ def client(id):
             if status:
                 return jsonify({'message': 'UPDATED'}), 200
             else:
-                return jsonify({'error': 'Client not found'}), 404
+                return render_template('404.html'), 404
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'DELETE':
         try:
@@ -70,8 +68,8 @@ def client(id):
             if status:
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return jsonify({'error': 'Client not found'}), 404
+                return render_template('404.html'), 404
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
