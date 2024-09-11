@@ -163,6 +163,8 @@ form {
   input[name="phone_number"],
   input[name="organization_name"],
   input[name="car_type"],
+  input[name="post"],
+  input[name="email"],
 textarea {
     background-color: #333;
     border: none;

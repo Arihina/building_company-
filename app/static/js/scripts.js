@@ -22,6 +22,18 @@ function deleteDriver(id) {
     });
 }
 
+function deleteEmpl(id) {
+  fetch(id, {
+    method: 'DELETE'
+  }).then(response => {
+        if (response.status == 204) {
+            window.location.replace("/employees");
+        } else {
+            alert('Ошибка при удалении');
+        }
+    });
+}
+
 function updateClient(event) {
     event.preventDefault();
     fetch(window.location.href, {
@@ -55,6 +67,29 @@ function updateDriver(event) {
             full_name: document.getElementById('full_name').value,
             phone_number: document.getElementById('phone_number').value,
             car_type: document.getElementById('car_type').value
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Запись обновлена');
+            window.location.reload();
+        } else {
+            alert('Ошибка при обновлении записи');
+        }
+    });
+}
+
+function updateEmpl(event) {
+    event.preventDefault();
+    fetch(window.location.href, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            full_name: document.getElementById('full_name').value,
+            phone_number: document.getElementById('phone_number').value,
+            email: document.getElementById('email').value,
+            post: document.getElementById('post').value
         })
     }).then(response => {
         if (response.ok) {

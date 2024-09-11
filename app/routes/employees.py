@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from sqlalchemy import select
 
 from .. import db, logger
@@ -11,31 +11,14 @@ employees_bp = Blueprint('employees_bp', __name__)
 @employees_bp.route('/employees', methods=['GET', 'POST'])
 def employees():
     logger.debug(f'{request.method} /employees')
-    if request.method == 'GET':
-        try:
-            query = (
-                select(models.Employee)
-            )
-            employees = db.session.execute(query).scalars().all()
-            employees_dto = [
-                schemas.EmployeeDto.from_orm(employee).dict() for employee in employees
-            ]
-
-            return jsonify(employees_dto), 200
-
-        except Exception as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'POST':
         try:
-            employee_dto = request.get_json()
             employee = models.Employee(
-                full_name=employee_dto['full_name'],
-                post=employee_dto['post'],
-                phone_number=employee_dto['phone_number'],
-                email=employee_dto['email']
+                full_name=request.form.get('full_name'),
+                post=request.form.get('post'),
+                phone_number=request.form.get('phone_number'),
+                email=request.form.get('email')
             )
 
             db.session.add(employee)
@@ -46,7 +29,23 @@ def employees():
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
+
+    try:
+        query = (
+            select(models.Employee)
+        )
+        employees = db.session.execute(query).scalars().all()
+        employees_dto = [
+            schemas.EmployeeDto.from_orm(employee).dict() for employee in employees
+        ]
+
+        return render_template('employees.html', employees=employees_dto), 200
+
+    except Exception as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        return render_template('500.html'), 500
 
 
 @employees_bp.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -56,22 +55,22 @@ def employee(id):
         try:
             employee = models.Employee.query.get(id)
             if not employee:
-                return jsonify({'error': 'Employee not found'}), 404
+                return render_template('404.html'), 404
 
             employee_dto = schemas.EmployeeDto.from_orm(employee).dict()
-            return jsonify({"employee": employee_dto}), 200
+            return render_template('employee_card.html', empl=employee_dto), 200
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'PUT':
         try:
             employee = models.Employee.query.get(id)
 
             if not employee:
-                return jsonify({'error': 'Employee not found'}), 404
+                return render_template('404.html'), 404
 
             employee_dto = request.get_json()
 
@@ -90,7 +89,7 @@ def employee(id):
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'DELETE':
         try:
@@ -101,8 +100,8 @@ def employee(id):
 
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return jsonify({'error': 'Employee not found'}), 404
+                return render_template('404.html'), 404
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
