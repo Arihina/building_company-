@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Содержания контрактов</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<h1>Содержания контрактов</h1>
+{% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+<div class="container">
+    <form action="{{ url_for('consists_bp.consists') }}" method="post">
+        <fieldset>
+            <legend>Добавить содержание контракта</legend>
+            <label for="product_id">Номер товара:</label>
+            <input type="text" id="product_id" name="product_id" required>
+
+            <label for="data">Дата:</label>
+            <input type="text" id="data" name="data" required>
+
+            <label for="order_amount">Сумма заказа:</label>
+            <input type="text" id="order_amount" name="order_amount">
+
+            <label for="account_number">Номер счёта:</label>
+            <input type="text" id="account_number" name="account_number">
+
+            <button type="submit">Добавить</button>
+        </fieldset>
+    </form>
+</div>
+<div class="container">
+    <table class="table_dark">
+        <tr>
+            <th>№</th>
+            <th>Номер товара</th>
+            <th>Дата</th>
+            <th>Сумма заказа</th>
+            <th>Номер счёта</th>
+        </tr>
+        {% for cons in consists %}
+        <tr onclick="window.location='/consists/{{cons.id}}';">
+            <td>{{cons.id}}</td>
+            <td>{{cons.product_id}}</td>
+            <td>{{cons.data}}</td>
+            <td>{{cons.order_amount}}</td>
+            <td>{{cons.account_number}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

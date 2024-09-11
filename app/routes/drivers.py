@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
 
 from .. import db, logger
 from .. import models
@@ -11,58 +11,58 @@ drivers_bp = Blueprint('drivers_bp', __name__)
 @drivers_bp.route('/drivers', methods=['GET', 'POST'])
 def drivers():
     logger.debug(f'{request.method} /drivers')
-    if request.method == 'GET':
-        try:
-            return jsonify(DriverService.get_drivers()), 200
-
-        except Exception as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'POST':
         try:
-            driver_dto = request.get_json()
             driver = models.Driver(
-                full_name=driver_dto['full_name'],
-                phone_number=driver_dto['phone_number'],
-                car_type=driver_dto['car_type']
+                full_name=request.form.get('full_name'),
+                phone_number=request.form.get('phone_number'),
+                car_type=request.form.get('car_type')
             )
 
             db.session.add(driver)
             db.session.commit()
 
-            return jsonify({'message': 'CREATED'}), 201
+            flash('Водитель добавлен успешно', 'success')
+            return redirect(url_for('drivers_bp.drivers'))
 
         except Exception as ex:
             db.session.rollback()
-            logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            flash('Произошла ошибка.', 'error')
+            return redirect(url_for('drivers_bp.drivers'))
+
+    try:
+        return render_template('drivers.html', drivers=DriverService.get_drivers()), 200
+    except Exception as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        return render_template('500.html'), 500
 
 
-@drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE', 'POST'])
 def driver(id):
     logger.debug(f'{request.method} /drivers/{id}')
     if request.method == 'GET':
         try:
             driver = models.Driver.query.get(id)
             if not driver:
-                return jsonify({'error': 'Driver not found'}), 404
+                return render_template('404.html'), 404
 
             driver_dto = schemas.DriverDto.from_orm(driver).dict()
-            return jsonify({"driver": driver_dto}), 200
+
+            return render_template('driver_card.html', driver=driver_dto), 200
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'PUT':
         try:
             driver = models.Driver.query.get(id)
 
             if not driver:
-                return jsonify({'error': 'Driver not found'}), 404
+                return render_template('404.html'), 404
 
             driver_dto = request.get_json()
 
@@ -79,7 +79,7 @@ def driver(id):
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'DELETE':
         try:
@@ -90,8 +90,8 @@ def driver(id):
 
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return jsonify({'error': 'Driver not found'}), 404
+                return render_template('404.html'), 404
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500

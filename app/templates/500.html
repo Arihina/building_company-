@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/500_styles.css') }}">
+    <title>500 Internal Server Error</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>500</h1>
+    <p>Внутренняя ошибка сервера.</p>
+    <p>Вы можете вернуться на <a href="/">главную страницу</a> или попробовать еще раз позже.</p>
+</div>
+<div style="text-align:center;">
+    <img src="{{ url_for('static', filename='img/background.jpg') }}" alt="Background Image">
+</div>
+</body>
+</html>

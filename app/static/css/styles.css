@@ -1,0 +1,264 @@
+body {
+    background-color: #121212;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-rendering: optimizeLegibility;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+a {
+    color: #1DB954;
+    font-family: 'Arial', sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+p, legend {
+    color: #BB86FC;
+    font-family: 'Arial', sans-serif;
+}
+
+h1, h2, label {
+    color: #1DB954;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #6c757d;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #000000;
+    color: #1DB954;
+}
+
+form {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+input[name="email"]
+textarea {
+    background-color: #333;
+    border: none;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    width: calc(100% - 20px);
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #5a6268;
+}
+
+.flash {
+    padding: 10px;
+}
+
+.flash.success {
+    border: 1px solid #21DB56;
+    background: #AEFFC5;
+    color: black;
+}
+
+.flash.error {
+    border: 1px solid #FF4343;
+    background: #FF9C9C;
+    color: black;
+}
+
+.table_dark {
+    font-family: 'Arial', sans-serif;
+    text-rendering: optimizeLegibility;
+    font-size: 14px;
+    width: 100%;
+    max-width: 640px;
+    text-align: left;
+    border-collapse: collapse;
+    background: #121212;
+    margin: 10px auto;
+}
+
+.table_dark th {
+    color: #1DB954;
+    border-bottom: 1px solid #6c757d;
+    padding: 12px 17px;
+}
+
+.table_dark td {
+    color: #BB86FC;
+    border-bottom: 1px solid #6c757d;
+    border-right: 1px solid #6c757d;
+    padding: 7px 17px;
+}
+
+.table_dark tr:last-child td {
+    border-bottom: none;
+}
+
+.table_dark td:last-child {
+    border-right: none;
+}
+
+.table_dark tr:hover td {
+    background-color: #333;
+    color: #1DB954;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #6c757d;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #000000;
+    color: #1DB954;
+}
+
+form {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  input[name="full_name"],
+  input[name="phone_number"],
+  input[name="organization_name"],
+  input[name="car_type"],
+  input[name="post"],
+  input[name="email"],
+  input[name="product_id"],
+  input[name="data"],
+  input[name="order_amount"],
+  input[name="account_number"],
+textarea {
+    background-color: #333;
+    border: none;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    width: calc(100% - 20px);
+    border-radius: 5px;
+  }
+
+  input[type="submit"] {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #5a6268;
+  }
+
+.flash {padding: 10px}
+.flash.success {
+    border: 1px solid #21DB56;
+    background: #AEFFC5;
+    color: black;
+}
+.flash.error {
+    border: 1px solid #FF4343;
+    background: #FF9C9C;
+    color: black;
+}
+
+.client-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    background-color: #333;
+}
+.client-card h2 {
+    margin-top: 0;
+}
+.client-card .field {
+    margin-bottom: 10px;
+}
+.client-card .field label {
+    font-weight: bold;
+}
+
+.form-card {
+    padding: 16px;
+    max-width: 200px;
+    margin: 0 auto;
+    background-color: #121212;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-card button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.delete-button {
+    background-color: #d9534f;
+}
+
+.delete-button:hover {
+    background-color: #c9302c;
+}
+
+.edit-button {
+    background-color: #f0ad4e;
+    color: #000;
+}
+
+.edit-button:hover {
+    background-color: #ec971f;
+}
+

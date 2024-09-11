@@ -16,7 +16,7 @@ class ClientService:
         return Client.query().select().where(Client.full_name == name)
 
     @staticmethod
-    def add_client(client_dto: ClientDto):
+    def add_client(client_dto: dict):
         client = Client(
             full_name=client_dto['full_name'],
             phone_number=client_dto['phone_number'],
@@ -69,8 +69,8 @@ class ClientService:
     @staticmethod
     def get_join_clients(manager_id: int) -> list[Client]:
         query = (((select(Client.full_name, Client.phone_number, Client.organization_name)
-                 .join(Contract, Client.id == Contract.client_id))
-                 .join(Employee, Employee.id == Contract.employee_id))
+                   .join(Contract, Client.id == Contract.client_id))
+                  .join(Employee, Employee.id == Contract.employee_id))
                  .where(Employee.id == manager_id).distinct())
 
         results = db.session.execute(query).all()
