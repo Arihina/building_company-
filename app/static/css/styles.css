@@ -1,5 +1,19 @@
+body {
+    background-color: #121212;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-rendering: optimizeLegibility;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
 a {
-    color: #EDB749;
+    color: #1DB954;
+    font-family: 'Arial', sans-serif;
     text-decoration: none;
     font-weight: bold;
 }
@@ -9,84 +23,114 @@ a:hover {
 }
 
 p {
-    color: #CAD4D6;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    color: #BB86FC;
+    font-family: 'Arial', sans-serif;
 }
 
-h1 {
-    color: #ffa372;
+h1, h2, label {
+    color: #1DB954;
+    font-family: 'Arial', sans-serif;
     text-align: center;
 }
 
-.button_dark {
-    background-color: #37B5A5;
-    color: #252F48;
-    border: none;
-    border-radius: 4px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    font-size: 14px;
-    padding: 10px 15px;
-    cursor: pointer;
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
     text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #6c757d;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-.button_dark:hover {
-    background-color: #2D9D8C;
+.button:hover {
+    background-color: #000000;
+    color: #1DB954;
 }
 
-body {
-    background-color: #252F48;
-    color: #CAD4D6;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+form {
+    background-color: #222;
     padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.input_dark {
-    background-color: #1D2A3A;
-    color: #CAD4D6;
-    border: 1px solid #37B5A5;
-    border-radius: 4px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    font-size: 14px;
-    padding: 8px 12px;
+input[name="email"]
+textarea {
+    background-color: #333;
+    border: none;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    width: calc(100% - 20px);
+    border-radius: 5px;
 }
 
-.input_dark:focus {
-    border-color: #EDB749;
-    outline: none;
+input[type="submit"] {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #5a6268;
+}
+
+.flash {
+    padding: 10px;
+}
+
+.flash.success {
+    border: 1px solid #21DB56;
+    background: #AEFFC5;
+    color: black;
+}
+
+.flash.error {
+    border: 1px solid #FF4343;
+    background: #FF9C9C;
+    color: black;
 }
 
 .table_dark {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-family: 'Arial', sans-serif;
+    text-rendering: optimizeLegibility;
     font-size: 14px;
-    width: 640px;
+    width: 100%;
+    max-width: 640px;
     text-align: left;
     border-collapse: collapse;
-    background: #252F48;
-    margin: 10px;
+    background: #121212;
+    margin: 10px auto;
 }
 
 .table_dark th {
-  color: #EDB749;
-  border-bottom: 1px solid #37B5A5;
-  padding: 12px 17px;
+    color: #1DB954;
+    border-bottom: 1px solid #6c757d;
+    padding: 12px 17px;
 }
 
 .table_dark td {
-  color: #CAD4D6;
-  border-bottom: 1px solid #37B5A5;
-  border-right:1px solid #37B5A5;
-  padding: 7px 17px;
+    color: #BB86FC;
+    border-bottom: 1px solid #6c757d;
+    border-right: 1px solid #6c757d;
+    padding: 7px 17px;
 }
 
 .table_dark tr:last-child td {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .table_dark td:last-child {
-  border-right: none;
+    border-right: none;
 }
 
 .table_dark tr:hover td {
-  text-decoration: underline;
+    background-color: #333;
+    color: #1DB954;
 }
