@@ -8,9 +8,6 @@ from ..services.orders import OrdersService
 orders_bp = Blueprint('orders_bp', __name__)
 
 
-# TODO: refactor with using services layer
-
-
 @orders_bp.route('/orders', methods=['GET', 'POST'])
 def orders():
     logger.debug(f'{request.method} /orders')
