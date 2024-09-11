@@ -115,3 +115,17 @@ class OrdersService:
         if 'status' in order_dto:
             order.status = order_dto['status']
         db.session.commit()
+
+    @staticmethod
+    def get_orders_id_by_manager(manager_id: int) -> list[int]:
+        query = (
+            select(
+                models.Orders.id
+            )
+            .join(models.Contract, models.Orders.id == models.Contract.id)
+            .where(models.Contract.employee_id == manager_id)
+        )
+
+        results = db.session.execute(query).fetchall()
+
+        return [row[0] for row in results]

@@ -19,9 +19,6 @@ def profile(id):
             if not manager:
                 return jsonify({'error': 'Manager not found'}), 404
 
-            # if manager.post.lower() != 'менеджер' and manager.post.lower() != 'manager':
-            #     return jsonify({'error': 'Forbidden'}), 403
-
             manager_dto = schemas.ManagerDto.from_orm(manager).dict()
 
             return jsonify({"manager": manager_dto}), 200
@@ -79,13 +76,16 @@ def processing_orders(id):
         try:
             order_dto = request.get_json()
             if order_dto['id']:
-                # TODO: add verification of the order belonging to the manager
-                order = OrdersService.get_order_by_id(order_dto['id'])
-                if not order:
-                    return jsonify({'error': 'Order not found'}), 404
+                if order_dto['id'] in OrdersService.get_orders_id_by_manager(id):
 
-                OrdersService.update_order(order_dto, order_dto['id'])
-                return jsonify({'message': 'UPDATED'}), 200
+                    order = OrdersService.get_order_by_id(order_dto['id'])
+                    if not order:
+                        return jsonify({'error': 'Order not found'}), 404
+
+                    OrdersService.update_order(order_dto, order_dto['id'])
+                    return jsonify({'message': 'UPDATED'}), 200
+                else:
+                    return jsonify({'error': 'Forbidden'}), 403
             else:
                 db.session.rollback()
                 return jsonify({'error': 'Bad Request'}), 400
