@@ -25,10 +25,10 @@
                        value="{{ client.organization_name if client.organization_name else 'Не указано' }}">
             </div>
             <div class="form-actions">
-                <button onclick="updateEntry(event)">Изменить</button>
+                <button onclick="updateClient(event)">Изменить</button>
             </div>
         </form>
-        <button onclick="deleteEntry({{client.id}})">Удалить</button>
+        <button onclick="deleteClient({{client.id}})">Удалить</button>
     </div>
 </div>
 </body>

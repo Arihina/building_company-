@@ -162,6 +162,7 @@ form {
   input[name="full_name"],
   input[name="phone_number"],
   input[name="organization_name"],
+  input[name="car_type"],
 textarea {
     background-color: #333;
     border: none;

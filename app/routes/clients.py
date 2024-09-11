@@ -58,7 +58,7 @@ def client(id):
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            abort(500)
+            return render_template('500.html'), 500
 
     if request.method == 'PUT':
         try:
