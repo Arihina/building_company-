@@ -40,7 +40,7 @@ def clients():
         return render_template('500.html'), 500
 
 
-@clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE', 'POST'])
+@clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def client(id):
     logger.debug(f'{request.method} /clients/{id}')
     if request.method == 'GET':

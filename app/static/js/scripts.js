@@ -10,6 +10,18 @@ function deleteClient(id) {
     });
 }
 
+function deleteW(id) {
+  fetch(id, {
+    method: 'DELETE'
+  }).then(response => {
+        if (response.status == 204) {
+            window.location.replace("/warehouses");
+        } else {
+            alert('Ошибка при удалении');
+        }
+    });
+}
+
 function deleteDriver(id) {
   fetch(id, {
     method: 'DELETE'
@@ -204,3 +216,26 @@ function updateProduct(event) {
         }
     });
 }
+
+function updateW(event) {
+    event.preventDefault();
+    fetch(window.location.href, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            quantity: document.getElementById('quantity').value,
+            address: document.getElementById('address').value,
+            product_id: document.getElementById('product_id').value
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Запись обновлена');
+            window.location.reload();
+        } else {
+            alert('Ошибка при обновлении записи');
+        }
+    });
+}
+

@@ -11,6 +11,7 @@ products_bp = Blueprint('products_bp', __name__)
 @products_bp.route('/products', methods=['GET', 'POST'])
 def products():
     logger.debug(f'{request.method} /products')
+
     if request.method == 'POST':
         try:
             product = models.Product(
