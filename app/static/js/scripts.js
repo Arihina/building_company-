@@ -58,6 +58,18 @@ function deleteContract(id) {
     });
 }
 
+function deleteProduct(id) {
+  fetch(id, {
+    method: 'DELETE'
+  }).then(response => {
+        if (response.status == 204) {
+            window.location.replace("/products");
+        } else {
+            alert('Ошибка при удалении');
+        }
+    });
+}
+
 function updateClient(event) {
     event.preventDefault();
     fetch(window.location.href, {
@@ -159,6 +171,29 @@ function updateContract(event) {
             contract_consist_id: document.getElementById('contract_consist_id').value,
             client_id: document.getElementById('client_id').value,
             employee_id: document.getElementById('employee_id').value
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Запись обновлена');
+            window.location.reload();
+        } else {
+            alert('Ошибка при обновлении записи');
+        }
+    });
+}
+
+function updateProduct(event) {
+    event.preventDefault();
+    fetch(window.location.href, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            type: document.getElementById('type').value,
+            price: document.getElementById('price').value,
+            unit_type: document.getElementById('unit_type').value
         })
     }).then(response => {
         if (response.ok) {

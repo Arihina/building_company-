@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template
+from flask import Blueprint, jsonify, request, render_template, flash
 from sqlalchemy import select
 
 from .. import db, logger
@@ -97,7 +97,7 @@ def employee(id):
             if employee:
                 db.session.delete(employee)
                 db.session.commit()
-
+                flash('Сотрудник успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
                 return render_template('404.html'), 404

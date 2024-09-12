@@ -172,6 +172,10 @@ form {
   input[name="contract_consist_id"],
   input[name="client_id"],
   input[name="employee_id"],
+  input[name="name"],
+  input[name="type"],
+  input[name="price"],
+  input[name="unit_type"],
 textarea {
     background-color: #333;
     border: none;

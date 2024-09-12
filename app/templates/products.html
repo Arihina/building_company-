@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Товары</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<h1>Товары</h1>
+{% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+<div class="container">
+    <form action="{{ url_for('products_bp.products') }}" method="post">
+        <fieldset>
+            <legend>Добавить товар</legend>
+            <label for="name">Наименование:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="type">Тип:</label>
+            <input type="text" id="type" name="type" required>
+
+            <label for="price">Цена:</label>
+            <input type="text" id="price" name="price" required>
+
+            <label for="unit_type">Единица измерения:</label>
+            <input type="text" id="unit_type" name="unit_type" required>
+
+            <button type="submit">Добавить</button>
+        </fieldset>
+    </form>
+</div>
+<div class="container">
+    <table class="table_dark">
+        <tr>
+            <th>№</th>
+            <th>Наименование</th>
+            <th>Тип</th>
+            <th>Цена</th>
+            <th>Единица измерения</th>
+        </tr>
+        {% for product in products %}
+        <tr onclick="window.location='/products/{{product.id}}';">
+            <td>{{product.id}}</td>
+            <td>{{product.name}}</td>
+            <td>{{product.type}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.unit_type}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

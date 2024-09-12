@@ -96,6 +96,7 @@ def contract(id):
                 db.session.delete(contract)
                 db.session.commit()
 
+                flash('Контракт успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
                 return render_template('404.html'), 404

@@ -30,8 +30,7 @@ def clients():
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            flash('Произошла ошибка.', 'error')
-            return redirect(url_for('clients_bp.clients'))
+            return render_template('500.html'), 500
 
     try:
         clients = ClientService.get_clients()
