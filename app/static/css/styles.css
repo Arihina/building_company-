@@ -169,6 +169,9 @@ form {
   input[name="data"],
   input[name="order_amount"],
   input[name="account_number"],
+  input[name="contract_consist_id"],
+  input[name="client_id"],
+  input[name="employee_id"],
 textarea {
     background-color: #333;
     border: none;
