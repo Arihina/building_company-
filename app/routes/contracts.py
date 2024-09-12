@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
 from sqlalchemy import select
 
 from .. import db, logger
@@ -11,41 +11,41 @@ contracts_bp = Blueprint('contracts_bp', __name__)
 @contracts_bp.route('/contracts', methods=['GET', 'POST'])
 def contracts():
     logger.debug(f'{request.method} /contracts')
-    if request.method == 'GET':
-        try:
-            query = (
-                select(models.Contract)
-            )
-            contracts = db.session.execute(query).scalars().all()
-            contracts_dto = [
-                schemas.ContractDto.from_orm(contract).dict() for contract in contracts
-            ]
-
-            return jsonify(contracts_dto), 200
-
-        except Exception as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'POST':
         try:
-            contract_dto = request.get_json()
             contract = models.Contract(
-                contract_consist_id=contract_dto['contract_consist_id'],
-                client_id=contract_dto['client_id'],
-                employee_id=contract_dto['employee_id']
+                contract_consist_id=request.form.get('contract_consist_id'),
+                client_id=request.form.get('client_id'),
+                employee_id=request.form.get('employee_id')
             )
 
             db.session.add(contract)
             db.session.commit()
 
-            return jsonify({'message': 'CREATED'}), 201
+            flash('Контракт добавлен успешно', 'success')
+            return redirect(url_for('contracts_bp.contracts'))
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
+
+    try:
+        query = (
+            select(models.Contract)
+        )
+        contracts = db.session.execute(query).scalars().all()
+        contracts_dto = [
+            schemas.ContractDto.from_orm(contract).dict() for contract in contracts
+        ]
+
+        return render_template('contracts.html', contracts=contracts_dto), 200
+
+    except Exception as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        return render_template('500.html'), 500
 
 
 @contracts_bp.route('/contracts/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -55,22 +55,22 @@ def contract(id):
         try:
             contract = models.Contract.query.get(id)
             if not contract:
-                return jsonify({'error': 'Contract not found'}), 404
+                return render_template('404.html'), 404
 
             contract_dto = schemas.ContractDto.from_orm(contract).dict()
-            return jsonify({"contract": contract_dto}), 200
+            return render_template('contract_card.html', contract=contract_dto), 200
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'PUT':
         try:
             contract = models.Contract.query.get(id)
 
             if not contract:
-                return jsonify({'error': 'Contract not found'}), 404
+                return render_template('404.html'), 404
 
             contract_dto = request.get_json()
 
@@ -87,7 +87,7 @@ def contract(id):
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'DELETE':
         try:
@@ -96,10 +96,11 @@ def contract(id):
                 db.session.delete(contract)
                 db.session.commit()
 
+                flash('Контракт успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return jsonify({'error': 'Contract not found'}), 404
+                return render_template('404.html'), 404
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500

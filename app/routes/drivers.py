@@ -87,7 +87,7 @@ def driver(id):
             if driver:
                 db.session.delete(driver)
                 db.session.commit()
-
+                flash('Водитель успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
                 return render_template('404.html'), 404

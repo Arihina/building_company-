@@ -30,8 +30,7 @@ def clients():
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            flash('Произошла ошибка.', 'error')
-            return redirect(url_for('clients_bp.clients'))
+            return render_template('500.html'), 500
 
     try:
         clients = ClientService.get_clients()
@@ -41,7 +40,7 @@ def clients():
         return render_template('500.html'), 500
 
 
-@clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE', 'POST'])
+@clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def client(id):
     logger.debug(f'{request.method} /clients/{id}')
     if request.method == 'GET':

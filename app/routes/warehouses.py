@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
 from sqlalchemy import select
 
 from .. import db, logger
@@ -11,41 +11,40 @@ warehouses_bp = Blueprint('warehouses_bp', __name__)
 @warehouses_bp.route('/warehouses', methods=['GET', 'POST'])
 def warehouses():
     logger.debug(f'{request.method} /warehouses')
-    if request.method == 'GET':
-        try:
-            query = (
-                select(models.Warehouse)
-            )
-            warehouses = db.session.execute(query).scalars().all()
-            warehouses_dto = [
-                schemas.WarehouseDto.from_orm(warehouse).dict() for warehouse in warehouses
-            ]
-
-            return jsonify(warehouses_dto), 200
-
-        except Exception as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
 
     if request.method == 'POST':
         try:
-            warehouse_dto = request.get_json()
             warehouse = models.Warehouse(
-                quantity=warehouse_dto['quantity'],
-                address=warehouse_dto['address'],
-                product_id=warehouse_dto['product_id']
+                quantity=request.form.get('quantity'),
+                address=request.form.get('address'),
+                product_id=request.form.get('product_id')
             )
 
             db.session.add(warehouse)
             db.session.commit()
 
-            return jsonify({'message': 'CREATED'}), 201
+            flash('Склад добавлен успешно', 'success')
+            return redirect(url_for('warehouses_bp.warehouses'))
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
+    try:
+        query = (
+            select(models.Warehouse)
+        )
+        warehouses = db.session.execute(query).scalars().all()
+        warehouses_dto = [
+            schemas.WarehouseDto.from_orm(warehouse).dict() for warehouse in warehouses
+        ]
+
+        return render_template('warehouses.html', warehouses=warehouses_dto), 200
+
+    except Exception as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        return render_template('500.html'), 500
 
 
 @warehouses_bp.route('/warehouses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -55,22 +54,22 @@ def warehouse(id):
         try:
             warehouse = models.Warehouse.query.get(id)
             if not warehouse:
-                return jsonify({'error': 'Warehouse not found'}), 404
+                return render_template('404.html'), 404
 
             warehouse_dto = schemas.WarehouseDto.from_orm(warehouse).dict()
-            return jsonify({"warehouse": warehouse_dto}), 200
+            return render_template('warehouse_card.html', w=warehouse_dto), 200
 
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'PUT':
         try:
             warehouse = models.Warehouse.query.get(id)
 
             if not warehouse:
-                return jsonify({'error': 'Warehouse not found'}), 404
+                return render_template('404.html'), 404
 
             warehouse_dto = request.get_json()
 
@@ -87,7 +86,7 @@ def warehouse(id):
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
 
     if request.method == 'DELETE':
         try:
@@ -96,10 +95,11 @@ def warehouse(id):
                 db.session.delete(warehouse)
                 db.session.commit()
 
+                flash('Склад успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return jsonify({'error': 'Warehouse not found'}), 404
+                return render_template('404.html'), 404
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            return render_template('500.html'), 500
