@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<h1>Заказы</h1>
+{% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+<div class="container">
+    <form action="{{ url_for('orders_bp.orders') }}" method="post">
+        <fieldset>
+            <legend>Добавить заказ</legend>
+            <label for="contract_id">№ контракта:</label>
+            <input type="text" id="contract_id" name="contract_id" required>
+
+            <label for="warehouse_id">№ склада:</label>
+            <input type="text" id="warehouse_id" name="warehouse_id" required>
+
+            <label for="driver_id">№ водителя:</label>
+            <input type="text" id="driver_id" name="driver_id" required>
+
+            <label for="delivery_address">Адрес доставки:</label>
+            <input type="text" id="delivery_address" name="delivery_address" required>
+
+            <label for="prepayment">Предоплата:</label>
+            <input type="text" id="prepayment" name="prepayment" required>
+
+            <label for="product_volume">Объём продукта:</label>
+            <input type="text" id="product_volume" name="product_volume" required>
+
+            <label for="status">Статус доставки:</label>
+            <input type="text" id="status" name="status" required>
+
+            <button type="submit">Добавить</button>
+        </fieldset>
+    </form>
+</div>
+<div class="container">
+    <table class="table_dark">
+        <tr>
+            <th>№</th>
+            <th>№ контракта</th>
+            <th>№ склада</th>
+            <th>№ водителя</th>
+            <th>Адрес доставки</th>
+            <th>Предоплата</th>
+            <th>Объём продукта</th>
+            <th>Статус доставки</th>
+        </tr>
+        {% for order in orders %}
+        <tr onclick="window.location='/orders/{{order.id}}';">
+            <td>{{order.id}}</td>
+            <td>{{order.contract_id}}</td>
+            <td>{{order.warehouse_id}}</td>
+            <td>{{order.driver_id}}</td>
+            <td>{{order.delivery_address}}</td>
+            <td>{{order.prepayment}}</td>
+            <td>{{order.product_volume}}</td>
+            <td>{{order.status}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

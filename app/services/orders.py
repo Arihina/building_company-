@@ -126,7 +126,7 @@ class OrdersService:
             if 'product_volume' in order_dto:
                 order.product_volume = order_dto['product_volume']
             if 'status' in order_dto:
-                order.status = order_dto['status']
+                order.status = False if (order_dto['status'] == '0' or order_dto['status'] == 'False') else True
             db.session.commit()
 
             return True

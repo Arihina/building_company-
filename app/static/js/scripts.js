@@ -22,6 +22,18 @@ function deleteW(id) {
     });
 }
 
+function deleteOrder(id) {
+  fetch(id, {
+    method: 'DELETE'
+  }).then(response => {
+        if (response.status == 204) {
+            window.location.replace("/orders");
+        } else {
+            alert('Ошибка при удалении');
+        }
+    });
+}
+
 function deleteDriver(id) {
   fetch(id, {
     method: 'DELETE'
@@ -239,3 +251,28 @@ function updateW(event) {
     });
 }
 
+function updateOrder(event) {
+    event.preventDefault();
+    fetch(window.location.href, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            contract_id: document.getElementById('contract_id').value,
+            warehouse_id: document.getElementById('warehouse_id').value,
+            driver_id: document.getElementById('driver_id').value,
+            delivery_address: document.getElementById('delivery_address').value,
+            prepayment: document.getElementById('prepayment').value,
+            product_volume: document.getElementById('product_volume').value,
+            status: document.getElementById('status').value
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Запись обновлена');
+            window.location.reload();
+        } else {
+            alert('Ошибка при обновлении записи');
+        }
+    });
+}
