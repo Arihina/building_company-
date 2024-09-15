@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request, render_template, abort, flash, redirect, url_for
+from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import schemas
@@ -27,17 +28,17 @@ def clients():
             flash('Клиент добавлен успешно', 'success')
             return redirect(url_for('clients_bp.clients'))
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     try:
         clients = ClientService.get_clients()
         return render_template('clients.html', clients=clients), 200
-    except Exception as ex:
+    except SQLAlchemyError as ex:
         logger.exception(ex)
-        return render_template('500.html'), 500
+        abort(500)
 
 
 @clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -48,16 +49,16 @@ def client(id):
             client = ClientService.get_client_by_id(id)
 
             if not client:
-                return render_template('404.html'), 404
+                abort(404)
 
             client_dto = schemas.ClientDto.from_orm(client).dict()
 
             return render_template('client_card.html', client=client_dto), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
@@ -65,12 +66,12 @@ def client(id):
             if status:
                 return jsonify({'message': 'UPDATED'}), 200
             else:
-                return render_template('404.html'), 404
+                abort(404)
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'DELETE':
         try:
@@ -79,8 +80,8 @@ def client(id):
                 flash('Клиент успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return render_template('404.html'), 404
-        except Exception as ex:
+                abort(404)
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)

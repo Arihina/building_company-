@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
+from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import models
@@ -26,17 +27,17 @@ def drivers():
             flash('Водитель добавлен успешно', 'success')
             return redirect(url_for('drivers_bp.drivers'))
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
-            flash('Произошла ошибка.', 'error')
+            logger.exception(ex)
             return redirect(url_for('drivers_bp.drivers'))
 
     try:
         return render_template('drivers.html', drivers=DriverService.get_drivers()), 200
-    except Exception as ex:
+    except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
-        return render_template('500.html'), 500
+        abort(500)
 
 
 @drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE', 'POST'])
@@ -46,23 +47,23 @@ def driver(id):
         try:
             driver = models.Driver.query.get(id)
             if not driver:
-                return render_template('404.html'), 404
+                abort(404)
 
             driver_dto = schemas.DriverDto.from_orm(driver).dict()
 
             return render_template('driver_card.html', driver=driver_dto), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
             driver = models.Driver.query.get(id)
 
             if not driver:
-                return render_template('404.html'), 404
+                abort(404)
 
             driver_dto = request.get_json()
 
@@ -76,10 +77,10 @@ def driver(id):
             db.session.commit()
 
             return jsonify({'message': 'UPDATED'}), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'DELETE':
         try:
@@ -90,8 +91,8 @@ def driver(id):
                 flash('Водитель успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return render_template('404.html'), 404
-        except Exception as ex:
+                abort(404)
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)

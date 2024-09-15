@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
+from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import models
@@ -27,10 +28,10 @@ def products():
             flash('Товар добавлен успешно', 'success')
             return redirect(url_for('products_bp.products'))
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     try:
         query = (
@@ -43,10 +44,10 @@ def products():
 
         return render_template('products.html', products=products_dto), 200
 
-    except Exception as ex:
+    except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
-        return render_template('500.html'), 500
+        abort(500)
 
 
 @products_bp.route('/products/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -56,22 +57,22 @@ def product(id):
         try:
             product = models.Product.query.get(id)
             if not product:
-                return render_template('404.html'), 404
+                abort(404)
 
             product_dto = schemas.ProductDto.from_orm(product).dict()
             return render_template('product_card.html', product=product_dto), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
             product = models.Product.query.get(id)
 
             if not product:
-                return render_template('404.html'), 404
+                abort(404)
 
             product_dto = request.get_json()
 
@@ -87,10 +88,10 @@ def product(id):
             db.session.commit()
 
             return jsonify({'message': 'UPDATED'}), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'DELETE':
         try:
@@ -102,8 +103,8 @@ def product(id):
                 flash('Продукт успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return render_template('404.html'), 404
-        except Exception as ex:
+                abort(404)
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)

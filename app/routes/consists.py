@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
+from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import models
@@ -27,11 +28,10 @@ def consists():
             flash('Содержание добавлено успешно', 'success')
             return redirect(url_for('consists_bp.consists'))
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            flash('Произошла ошибка.', 'error')
-            return render_template('500.html'), 500
+            abort(500)
 
     try:
         query = (
@@ -44,10 +44,10 @@ def consists():
 
         return render_template('consists.html', consists=consists_dto), 200
 
-    except Exception as ex:
+    except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
-        return render_template('500.html'), 500
+        abort(500)
 
 
 @consists_bp.route('/consists/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -57,22 +57,22 @@ def consist(id):
         try:
             consist = models.Consist.query.get(id)
             if not consist:
-                return render_template('404.html'), 404
+                abort(404)
 
             consist_dto = schemas.ConsistDto.from_orm(consist).dict()
             return render_template('consist_card.html', cons=consist_dto), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
             consist = models.Consist.query.get(id)
 
             if not consist:
-                return render_template('404.html'), 404
+                abort(404)
 
             consist_dto = request.get_json()
 
@@ -88,10 +88,10 @@ def consist(id):
             db.session.commit()
 
             return jsonify({'message': 'UPDATED'}), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'DELETE':
         try:
@@ -103,8 +103,8 @@ def consist(id):
                 flash('Содержание успешно удалено', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return render_template('404.html'), 404
-        except Exception as ex:
+                abort(404)
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)

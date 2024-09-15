@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request, render_template, flash
+from flask import Blueprint, abort, jsonify, request, render_template, flash
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import models
@@ -26,10 +27,10 @@ def employees():
 
             return jsonify({'message': 'CREATED'}), 201
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     try:
         query = (
@@ -42,10 +43,10 @@ def employees():
 
         return render_template('employees.html', employees=employees_dto), 200
 
-    except Exception as ex:
+    except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
-        return render_template('500.html'), 500
+        abort(500)
 
 
 @employees_bp.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -55,22 +56,22 @@ def employee(id):
         try:
             employee = models.Employee.query.get(id)
             if not employee:
-                return render_template('404.html'), 404
+                abort(404)
 
             employee_dto = schemas.EmployeeDto.from_orm(employee).dict()
             return render_template('employee_card.html', empl=employee_dto), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
             employee = models.Employee.query.get(id)
 
             if not employee:
-                return render_template('404.html'), 404
+                abort(404)
 
             employee_dto = request.get_json()
 
@@ -86,10 +87,10 @@ def employee(id):
             db.session.commit()
 
             return jsonify({'message': 'UPDATED'}), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'DELETE':
         try:
@@ -100,8 +101,8 @@ def employee(id):
                 flash('Сотрудник успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return render_template('404.html'), 404
-        except Exception as ex:
+                abort(404)
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)

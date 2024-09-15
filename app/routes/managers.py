@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, abort, jsonify, request
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import models
@@ -17,16 +18,16 @@ def profile(id):
         try:
             manager = models.Employee.query.get(id)
             if not manager:
-                return jsonify({'error': 'Manager not found'}), 404
+                abort(404)
 
             manager_dto = schemas.ManagerDto.from_orm(manager).dict()
 
             return jsonify({"manager": manager_dto}), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
@@ -52,10 +53,10 @@ def processing_orders(id):
             ]
 
             return jsonify(incomplete_orders_dto), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
     if request.method == 'POST':
         try:
@@ -67,10 +68,10 @@ def processing_orders(id):
             db.session.rollback()
             logger.exception(ex)
             return jsonify({'error': 'Bad Request', 'message': str(ex)}), 400
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
@@ -80,7 +81,7 @@ def processing_orders(id):
 
                     order = OrdersService.get_order_by_id(order_dto['id'])
                     if not order:
-                        return jsonify({'error': 'Order not found'}), 404
+                        abort(404)
 
                     OrdersService.update_order(order_dto, order_dto['id'])
                     return jsonify({'message': 'UPDATED'}), 200
@@ -90,10 +91,10 @@ def processing_orders(id):
                 db.session.rollback()
                 return jsonify({'error': 'Bad Request'}), 400
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])
@@ -119,10 +120,10 @@ def completes_orders(id):
             ]
 
             return jsonify(complete_orders_dto), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])
@@ -142,20 +143,20 @@ def managers_clients(id):
             ]
 
             return jsonify(clients_dto), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
     if request.method == 'POST':
         try:
             ClientService.add_client(request.get_json())
 
             return jsonify({'message': 'CREATED'}), 201
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/drivers', methods=['GET'])
@@ -164,7 +165,7 @@ def managers_drivers(id):
     if request.method == 'GET':
         try:
             return jsonify(DriverService.get_drivers()), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)

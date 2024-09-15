@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, request, render_template, flash, redirect, url_for
+from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import models
@@ -30,17 +31,17 @@ def orders():
             flash('Заказ добавлен успешно', 'success')
             return redirect(url_for('orders_bp.orders'))
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     try:
         return render_template('orders.html', orders=OrdersService.get_orders()), 200
-    except Exception as ex:
+    except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
-        return render_template('500.html'), 500
+        abort(500)
 
 
 @orders_bp.route('/orders/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -50,15 +51,15 @@ def order(id):
         try:
             order = models.Orders.query.get(id)
             if not order:
-                return render_template('404.html'), 404
+                abort(404)
 
             order_dto = schemas.OrdersDto.from_orm(order).dict()
             return render_template('order_card.html', order=order_dto), 200
 
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'PUT':
         try:
@@ -66,13 +67,13 @@ def order(id):
             status = OrdersService.update_order(order_dto, id)
 
             if not status:
-                return render_template('404.html'), 404
+                abort(404)
 
             return jsonify({'message': 'UPDATED'}), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
 
     if request.method == 'DELETE':
         try:
@@ -81,8 +82,8 @@ def order(id):
                 flash('Заказ успешно удалён', 'success')
                 return jsonify({'message': 'DELETED'}), 204
             else:
-                return render_template('404.html'), 404
-        except Exception as ex:
+                abort(404)
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return render_template('500.html'), 500
+            abort(500)
