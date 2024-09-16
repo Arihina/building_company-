@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, jsonify, request
+from flask import Blueprint, abort, jsonify, request, render_template
 from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
@@ -23,7 +23,7 @@ def profile(id):
 
             manager_dto = schemas.ManagerDto.from_orm(manager).dict()
 
-            return jsonify({"manager": manager_dto}), 200
+            return render_template('profile.html', m=manager_dto, id=id)
 
         except SQLAlchemyError as ex:
             db.session.rollback()
@@ -68,7 +68,7 @@ def processing_orders(id):
         except ValueError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Bad Request', 'message': str(ex)}), 400
+            abort(400)
         except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
@@ -87,10 +87,10 @@ def processing_orders(id):
                     OrdersService.update_order(order_dto, order_dto['id'])
                     return jsonify({'message': 'UPDATED'}), 200
                 else:
-                    return jsonify({'error': 'Forbidden'}), 403
+                    abort(403)
             else:
                 db.session.rollback()
-                return jsonify({'error': 'Bad Request'}), 400
+                abort(400)
 
         except SQLAlchemyError as ex:
             db.session.rollback()
