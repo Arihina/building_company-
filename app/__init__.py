@@ -36,6 +36,7 @@ with app.app_context():
     from .routes.orders import orders_bp
     from .routes.managers import managers_bp
     from .routes.info import info_bp
+    from .routes.admin import admin_bp
 
     app.register_blueprint(employees_bp)
     app.register_blueprint(clients_bp)
@@ -47,5 +48,6 @@ with app.app_context():
     app.register_blueprint(orders_bp)
     app.register_blueprint(managers_bp)
     app.register_blueprint(info_bp)
+    app.register_blueprint(admin_bp)
 
     from . import models
