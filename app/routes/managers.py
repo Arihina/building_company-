@@ -178,7 +178,7 @@ def managers_products(id):
     if request.method == 'GET':
         try:
             return jsonify(ProductService.get_product_with_warehouses()), 200
-        except Exception as ex:
+        except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
-            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+            abort(500)
