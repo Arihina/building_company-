@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ {{ order.id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="../static/js/scripts.js" defer></script>
+</head>
+<body>
+<h1>Заказ № {{ order.id }}</h1>
+<div class="container">
+    <div class="form-card">
+        <form>
+            <div class="field">
+                <label for="contract_id">№ контракта:</label>
+                <input type="text" id="contract_id" name="contract_id" value="{{order.contract_id}}" required>
+            </div>
+            <div class="field">
+                <label for="warehouse_id">№ склада:</label>
+                <input type="text" id="warehouse_id" name="warehouse_id" value="{{order.warehouse_id}}" required>
+            </div>
+            <div class="field">
+                <label for="driver_id">№ водителя:</label>
+                <input type="text" id="driver_id" name="driver_id" value="{{ order.driver_id }}" required>
+            </div>
+            <div class="field">
+                <label for="delivery_address">Адрес доставки:</label>
+                <input type="text" id="delivery_address" name="delivery_address" value="{{ order.delivery_address }}"
+                       required>
+            </div>
+            <div class="field">
+                <label for="prepayment">Предоплата:</label>
+                <input type="text" id="prepayment" name="prepayment" value="{{ order.prepayment }}" required>
+            </div>
+            <div class="field">
+                <label for="product_volume">Объём продукта:</label>
+                <input type="text" id="product_volume" name="product_volume" value="{{ order.product_volume }}" required>
+            </div>
+            <div class="field">
+                <label for="status">Статус доставки:</label>
+                <input type="text" id="status" name="status" value="{{ order.status }}" required>
+            </div>
+            <div class="form-actions">
+                <button onclick="updateOrder(event)">Изменить</button>
+            </div>
+        </form>
+        <button onclick="deleteOrder({{order.id}})">Удалить</button>
+    </div>
+</div>
+</body>
+</html>

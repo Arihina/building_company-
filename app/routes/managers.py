@@ -31,33 +31,14 @@ def profile(id):
         abort(500)
 
 
+@managers_bp.route('/managers/<int:id>/orders/<int:order_id>', methods=['GET', 'PUT'])
+def update_order(id, order_id):
+    pass
+
+
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
 def processing_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders')
-    if request.method == 'GET':
-        try:
-            incomplete_orders = OrdersService.get_orders_by_manager_id(id, False)
-
-            incomplete_orders_dto = [
-                schemas.OrderDto(
-                    id=order.id,
-                    client_name=order.client_name,
-                    driver_name=order.driver_name,
-                    product_name=order.product_name,
-                    product_volume=order.product_volume,
-                    data=order.data,
-                    deliver_address=order.delivery_address,
-                    warehouse_address=order.warehouse_address,
-                    order_amount=order.order_amount
-                ).dict()
-                for order in incomplete_orders
-            ]
-
-            return jsonify(incomplete_orders_dto), 200
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
 
     if request.method == 'POST':
         try:
@@ -97,34 +78,58 @@ def processing_orders(id):
             logger.exception(ex)
             abort(500)
 
+    try:
+        incomplete_orders = OrdersService.get_orders_by_manager_id(id, False)
+
+        incomplete_orders_dto = [
+            schemas.OrderDto(
+                id=order.id,
+                client_name=order.client_name,
+                driver_name=order.driver_name,
+                product_name=order.product_name,
+                product_volume=order.product_volume,
+                data=order.data,
+                deliver_address=order.delivery_address,
+                warehouse_address=order.warehouse_address,
+                order_amount=order.order_amount
+            ).dict()
+            for order in incomplete_orders
+        ]
+
+        return render_template('managers_orders.html', orders=incomplete_orders_dto, id=id), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
+
 
 @managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])
 def completes_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders/completes')
-    if request.method == 'GET':
-        try:
-            complete_orders = OrdersService.get_orders_by_manager_id(id, True)
 
-            complete_orders_dto = [
-                schemas.OrderDto(
-                    id=order.id,
-                    client_name=order.client_name,
-                    driver_name=order.driver_name,
-                    product_name=order.product_name,
-                    product_volume=order.product_volume,
-                    data=order.data,
-                    deliver_address=order.delivery_address,
-                    warehouse_address=order.warehouse_address,
-                    order_amount=order.order_amount
-                ).dict()
-                for order in complete_orders
-            ]
+    try:
+        complete_orders = OrdersService.get_orders_by_manager_id(id, True)
 
-            return jsonify(complete_orders_dto), 200
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
+        complete_orders_dto = [
+            schemas.OrderDto(
+                id=order.id,
+                client_name=order.client_name,
+                driver_name=order.driver_name,
+                product_name=order.product_name,
+                product_volume=order.product_volume,
+                data=order.data,
+                deliver_address=order.delivery_address,
+                warehouse_address=order.warehouse_address,
+                order_amount=order.order_amount
+            ).dict()
+            for order in complete_orders
+        ]
+
+        return render_template('orders_compl.html', orders=complete_orders_dto), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])

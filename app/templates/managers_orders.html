@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<h1>Заказы в работе</h1>
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+<div class="flash-messages">
+    {% for category, message in messages %}
+    <div class="flash {{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+<div class="container">
+    <form action="{{ url_for('managers_bp.processing_orders', id=id) }}" method="post">
+        <fieldset>
+            <legend>Добавить заказ</legend>
+            <label for="contract_id">№ контракта:</label>
+            <input type="text" id="contract_id" name="contract_id" required>
+
+            <label for="warehouse_id">№ склада:</label>
+            <input type="text" id="warehouse_id" name="warehouse_id" required>
+
+            <label for="driver_id">№ водителя:</label>
+            <input type="text" id="driver_id" name="driver_id" required>
+
+            <label for="delivery_address">Адрес доставки:</label>
+            <input type="text" id="delivery_address" name="delivery_address" required>
+
+            <label for="prepayment">Предоплата:</label>
+            <input type="text" id="prepayment" name="prepayment" required>
+
+            <label for="product_volume">Объём продукта:</label>
+            <input type="text" id="product_volume" name="product_volume" required>
+
+            <button type="submit">Добавить</button>
+        </fieldset>
+    </form>
+</div>
+<div class="container">
+    <table class="table_dark">
+        <tr>
+            <th>№ заказа</th>
+            <th>ФИО клиента</th>
+            <th>ФИО водителя</th>
+            <th>Товар</th>
+            <th>Объём</th>
+            <th>Дата</th>
+            <th>Адрес доставки</th>
+            <th>Склад</th>
+            <th>Сумма</th>
+        </tr>
+        {% for order in orders %}
+        <tr onclick="window.location='/orders/{{order.id}}';">
+            <td>{{order.id}}</td>
+            <td>{{order.client_name}}</td>
+            <td>{{order.driver_name}}</td>
+            <td>{{order.product_name}}</td>
+            <td>{{order.product_volume}}</td>
+            <td>{{order.data}}</td>
+            <td>{{order.deliver_address}}</td>
+            <td>{{order.warehouse_address}}</td>
+            <td>{{order.order_amount}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
