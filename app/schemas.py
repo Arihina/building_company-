@@ -131,3 +131,16 @@ class NewOrderDto(BaseModel):
     prepayment: float
     account_number: str
     product_volume: int
+
+
+class ProductAndWarehouses(BaseModel):
+    id: int
+    quantity: int
+    address: str
+    type: str
+    name: str
+    price: float
+    unit_type: str
+
+    class Config:
+        from_attributes = True

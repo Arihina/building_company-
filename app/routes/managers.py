@@ -6,6 +6,7 @@ from .. import schemas
 from ..services.clients import ClientService
 from ..services.drivers import DriverService
 from ..services.orders import OrdersService
+from ..services.products import ProductService
 
 managers_bp = Blueprint('managers_bp', __name__)
 
@@ -164,6 +165,18 @@ def managers_drivers(id):
     if request.method == 'GET':
         try:
             return jsonify(DriverService.get_drivers()), 200
+        except Exception as ex:
+            db.session.rollback()
+            logger.exception(ex)
+            return jsonify({'error': 'Internal Server Error', 'message': str(ex)}), 500
+
+
+@managers_bp.route('/managers/<int:id>/products', methods=['GET'])
+def managers_products(id):
+    logger.debug(f'{request.method} /managers/{id}/products')
+    if request.method == 'GET':
+        try:
+            return jsonify(ProductService.get_product_with_warehouses()), 200
         except Exception as ex:
             db.session.rollback()
             logger.exception(ex)
