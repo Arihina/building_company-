@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, jsonify, request, render_template
+from flask import Blueprint, abort, jsonify, request, render_template, flash
 from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
@@ -15,20 +15,20 @@ managers_bp = Blueprint('managers_bp', __name__)
 @managers_bp.route('/managers/<int:id>', methods=['GET'])
 def profile(id):
     logger.debug(f'{request.method} /managers/{id}')
-    if request.method == 'GET':
-        try:
-            manager = models.Employee.query.get(id)
-            if not manager:
-                abort(404)
 
-            manager_dto = schemas.ManagerDto.from_orm(manager).dict()
+    try:
+        manager = models.Employee.query.get(id)
+        if not manager:
+            abort(404)
 
-            return render_template('profile.html', m=manager_dto, id=id)
+        manager_dto = schemas.ManagerDto.from_orm(manager).dict()
 
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
+        return render_template('profile.html', m=manager_dto, id=id)
+
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
@@ -130,55 +130,75 @@ def completes_orders(id):
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])
 def managers_clients(id):
     logger.debug(f'{request.method} /managers/{id}/clients')
-    if request.method == 'GET':
-        try:
-            clients = ClientService.get_join_clients(id)
-
-            clients_dto = [
-                schemas.ClientJoinDto(
-                    full_name=client.full_name,
-                    phone_number=client.phone_number,
-                    organization_name=client.organization_name
-                ).dict()
-                for client in clients
-            ]
-
-            return jsonify(clients_dto), 200
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
 
     if request.method == 'POST':
         try:
-            ClientService.add_client(request.get_json())
+            full_name = request.form.get('full_name')
+            phone_number = request.form.get('phone_number')
+            organization_name = request.form.get('organization_name')
 
-            return jsonify({'message': 'CREATED'}), 201
+            client_dto = {
+                'full_name': full_name,
+                'phone_number': phone_number,
+                'organization_name': organization_name if organization_name else None
+            }
+            ClientService.add_client(client_dto)
+
+            flash('Клиент добавлен успешно', 'success')
         except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+    try:
+        clients = ClientService.get_join_clients(id)
+
+        clients_dto = [
+            schemas.ClientJoinDto(
+                full_name=client.full_name,
+                phone_number=client.phone_number,
+                organization_name=client.organization_name
+            ).dict()
+            for client in clients
+        ]
+
+        return render_template('clients_list.html', clients=clients_dto, id=id), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/drivers', methods=['GET'])
 def managers_drivers(id):
     logger.debug(f'{request.method} /managers/{id}/drivers')
-    if request.method == 'GET':
-        try:
-            return jsonify(DriverService.get_drivers()), 200
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
+
+    try:
+        return render_template('drivers.html', drivers=DriverService.get_drivers()), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
 
 
 @managers_bp.route('/managers/<int:id>/products', methods=['GET'])
 def managers_products(id):
     logger.debug(f'{request.method} /managers/{id}/products')
-    if request.method == 'GET':
-        try:
-            return jsonify(ProductService.get_product_with_warehouses()), 200
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
+
+    try:
+        return render_template('products_list.html',
+                               pws=ProductService.get_product_with_warehouses()), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
+
+
+@managers_bp.route('/managers/<int:id>/clients/all', methods=['GET'])
+def all_clients(id):
+    try:
+        clients = ClientService.get_clients()
+        return render_template('all_clients.html', clients=clients, id=id), 200
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Клиенты</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<h1>Клиенты</h1>
+<div class="container">
+    <table class="table_dark">
+        <tr>
+            <th>№</th>
+            <th>ФИО</th>
+            <th>Номер телефона</th>
+            <th>Фирма</th>
+        </tr>
+        {% for client in clients %}
+        <tr>
+            <td>{{client.id}}</td>
+            <td>{{client.full_name}}</td>
+            <td>{{client.phone_number}}</td>
+            <td>{{client.organization_name}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>
