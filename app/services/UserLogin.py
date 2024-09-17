@@ -19,3 +19,6 @@ class User(UserMixin):
 
     def is_active(self):
         return True
+
+    def get_post(self):
+        return self.post

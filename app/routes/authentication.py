@@ -26,8 +26,11 @@ def login():
         if employee:
             user = load_user(employee.id)
             login_user(user)
-            return redirect(request.args.get('next') or url_for('managers_bp.profile',
-                                                                id=current_user.get_id()))
+            if user.get_post() == 'manager':
+                return redirect(request.args.get('next') or url_for('managers_bp.profile',
+                                                                    id=current_user.get_id()))
+            else:
+                return redirect(request.args.get('next') or url_for('admin_bp.admin_page'))
     return render_template('login.html'), 200
 
 
