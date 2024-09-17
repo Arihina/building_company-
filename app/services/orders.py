@@ -149,7 +149,7 @@ class OrdersService:
             select(
                 models.Orders.id
             )
-            .join(models.Contract, models.Orders.id == models.Contract.id)
+            .join(models.Contract, models.Orders.contract_id == models.Contract.id)
             .where(models.Contract.employee_id == manager_id)
         )
 
