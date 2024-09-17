@@ -26,6 +26,7 @@ def login():
         email = str(request.form.get('email'))
         employee = models.Employee.query.filter_by(email=str(email)).first()
         if employee:
+            '''
             user = load_user(employee.id)
             login_user(user)
             if user.get_post() == 'manager':
@@ -33,6 +34,7 @@ def login():
                                                                     id=current_user.get_id()))
             else:
                 return redirect(request.args.get('next') or url_for('admin_bp.admin_page'))
+            '''
     return render_template('login.html'), 200
 
 
