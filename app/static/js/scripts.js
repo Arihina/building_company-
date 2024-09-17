@@ -276,3 +276,29 @@ function updateOrder(event) {
         }
     });
 }
+
+function updateManagerOrder(event, order_id) {
+    event.preventDefault();
+    fetch(window.location.href, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: order_id,
+            warehouse_id: document.getElementById('warehouse_id').value,
+            driver_id: document.getElementById('driver_id').value,
+            delivery_address: document.getElementById('delivery_address').value,
+            prepayment: document.getElementById('prepayment').value,
+            product_volume: document.getElementById('product_volume').value,
+            status: document.getElementById('status').value
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('Запись обновлена');
+            window.location.reload();
+        } else {
+            alert('Ошибка при обновлении записи');
+        }
+    });
+}

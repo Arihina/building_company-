@@ -1,4 +1,6 @@
-from flask import Blueprint, abort, jsonify, request, render_template, flash
+from datetime import datetime
+
+from flask import Blueprint, abort, request, render_template, flash, jsonify
 from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
@@ -33,34 +35,11 @@ def profile(id):
 
 @managers_bp.route('/managers/<int:id>/orders/<int:order_id>', methods=['GET', 'PUT'])
 def update_order(id, order_id):
-    pass
-
-
-@managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST', 'PUT'])
-def processing_orders(id):
-    logger.debug(f'{request.method} /managers/{id}/orders')
-
-    if request.method == 'POST':
-        try:
-            order_dto = schemas.NewOrderDto.model_validate(request.get_json())
-            OrdersService.add_order(id, order_dto)
-
-            return jsonify({'message': 'CREATED'}), 201
-        except ValueError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(400)
-        except SQLAlchemyError as ex:
-            db.session.rollback()
-            logger.exception(ex)
-            abort(500)
-
     if request.method == 'PUT':
         try:
             order_dto = request.get_json()
             if order_dto['id']:
                 if order_dto['id'] in OrdersService.get_orders_id_by_manager(id):
-
                     order = OrdersService.get_order_by_id(order_dto['id'])
                     if not order:
                         abort(404)
@@ -73,6 +52,53 @@ def processing_orders(id):
                 db.session.rollback()
                 abort(400)
 
+        except SQLAlchemyError as ex:
+            db.session.rollback()
+            logger.exception(ex)
+            abort(500)
+    try:
+        order = OrdersService.get_order_by_id(order_id)
+        if order:
+            if order.id not in OrdersService.get_orders_id_by_manager(id):
+                abort(403)
+            else:
+                return render_template('manager_order_card.html', order=order), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
+
+
+@managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST'])
+def processing_orders(id):
+    logger.debug(f'{request.method} /managers/{id}/orders')
+
+    if request.method == 'POST':
+        try:
+            form_data = request.form
+            order_dto = schemas.NewOrderDto(
+                client_name=form_data['client_name'],
+                product_name=form_data['product_name'],
+                driver_name=form_data['driver_name'],
+                client_id=int(form_data['client_id']),
+                product_id=int(form_data['product_id']),
+                driver_id=int(form_data['driver_id']),
+                warehouse_id=int(form_data['warehouse_id']),
+                delivery_address=form_data['delivery_address'],
+                data=datetime.strptime(form_data['data'], '%Y-%m-%d'),
+                order_amount=float(form_data['order_amount']),
+                prepayment=float(form_data['prepayment']),
+                account_number=form_data['account_number'],
+                product_volume=int(form_data['product_volume'])
+            )
+            OrdersService.add_order(id, order_dto)
+
+            flash('Заказ добавлен успешно', 'success')
+
+        except ValueError as ex:
+            db.session.rollback()
+            logger.exception(ex)
+            abort(400)
         except SQLAlchemyError as ex:
             db.session.rollback()
             logger.exception(ex)

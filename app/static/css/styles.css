@@ -211,6 +211,9 @@ form {
   input[name="type"],
   input[name="price"],
   input[name="unit_type"],
+  input[name="client_name"],
+  input[name="product_name"],
+  input[name="driver_name"],
 textarea {
     background-color: #333;
     border: none;
