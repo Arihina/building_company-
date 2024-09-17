@@ -21,11 +21,11 @@
             </div>
             <div class="field">
                 <label for="email">Email:</label>
-                <input type="text" id="email" name="email" value="{{ empl.email }}">
+                <input type="text" id="email" name="email" value="{{ empl.email }}" required>
             </div>
             <div class="field">
                 <label for="post">Должность:</label>
-                <input type="text" id="post" name="post" value="{{ empl.post }}">
+                <input type="text" id="post" name="post" value="{{ empl.post }}" required>
             </div>
             <div class="form-actions">
                 <button onclick="updateEmpl(event)">Изменить</button>

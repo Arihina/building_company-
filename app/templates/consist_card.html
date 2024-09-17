@@ -21,11 +21,11 @@
             </div>
             <div class="field">
                 <label for="order_amount">Сумма заказа:</label>
-                <input type="text" id="order_amount" name="order_amount" value="{{ cons.order_amount }}">
+                <input type="text" id="order_amount" name="order_amount" value="{{ cons.order_amount }}" required>
             </div>
             <div class="field">
                 <label for="account_number">Номер счёта:</label>
-                <input type="text" id="account_number" name="account_number" value="{{ cons.account_number }}">
+                <input type="text" id="account_number" name="account_number" value="{{ cons.account_number }}" required>
             </div>
             <div class="form-actions">
                 <button onclick="updateCons(event)">Изменить</button>
