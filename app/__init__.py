@@ -5,16 +5,19 @@ from logging import getLogger
 
 from flask import Flask
 from flask_cors import CORS
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 from config import settings
 
 app = Flask(__name__)
-CORS(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = settings.db_url
 app.config['SECRET_KEY'] = settings.app_secret_key
 
 db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+CORS(app)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 logger_config = os.path.join(current_dir, 'logger.config')
@@ -38,6 +41,7 @@ with app.app_context():
     from .routes.info import info_bp
     from .routes.admin import admin_bp
     from .routes.errors import errors_bp
+    from .routes.authentication import auth_bp
 
     app.register_blueprint(employees_bp)
     app.register_blueprint(clients_bp)
@@ -51,5 +55,6 @@ with app.app_context():
     app.register_blueprint(info_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(errors_bp)
+    app.register_blueprint(auth_bp)
 
     from . import models

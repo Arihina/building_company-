@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import Blueprint, abort, request, render_template, flash, jsonify
+from flask_login import login_required, current_user
 from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
@@ -15,8 +16,12 @@ managers_bp = Blueprint('managers_bp', __name__)
 
 
 @managers_bp.route('/managers/<int:id>', methods=['GET'])
+@login_required
 def profile(id):
     logger.debug(f'{request.method} /managers/{id}')
+
+    if id != int(current_user.get_id()):
+        abort(403)
 
     try:
         manager = models.Employee.query.get(id)
