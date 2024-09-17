@@ -6,12 +6,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.check_post import admin_required
 
 consists_bp = Blueprint('consists_bp', __name__)
 
 
 @consists_bp.route('/consists', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def consists():
     logger.debug(f'{request.method} /consists')
 
@@ -54,6 +56,7 @@ def consists():
 
 @consists_bp.route('/consists/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
+@admin_required
 def consist(id):
     logger.debug(f'{request.method} /consists/{id}')
     if request.method == 'GET':

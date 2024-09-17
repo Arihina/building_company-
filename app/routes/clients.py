@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import schemas
+from ..services.check_post import admin_required
 from ..services.clients import ClientService
 
 clients_bp = Blueprint('clients_bp', __name__)
@@ -11,6 +12,7 @@ clients_bp = Blueprint('clients_bp', __name__)
 
 @clients_bp.route('/clients', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def clients():
     logger.debug(f'{request.method} /clients')
 
@@ -45,6 +47,7 @@ def clients():
 
 @clients_bp.route('/clients/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
+@admin_required
 def client(id):
     logger.debug(f'{request.method} /clients/{id}')
     if request.method == 'GET':

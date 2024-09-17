@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, request
 from flask_login import logout_user, current_user, login_user, login_required
 
 from app import login_manager
-from .. import models
+from .. import models, logger
 from ..services.UserLogin import User
 
 auth_bp = Blueprint('auth_bp', __name__)
@@ -17,6 +17,8 @@ def load_user(user_id):
 
 @auth_bp.route('/login/', methods=['GET', 'POST'])
 def login():
+    logger.debug('/login')
+
     if current_user.is_authenticated:
         return redirect(url_for('managers_bp.profile', id=current_user.get_id()))
 
@@ -37,5 +39,6 @@ def login():
 @auth_bp.route('/logout')
 @login_required
 def logout():
+    logger.debug('/logout')
     logout_user()
     return redirect(url_for('auth_bp.login'))

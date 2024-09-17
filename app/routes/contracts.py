@@ -6,12 +6,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.check_post import admin_required
 
 contracts_bp = Blueprint('contracts_bp', __name__)
 
 
 @contracts_bp.route('/contracts', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def contracts():
     logger.debug(f'{request.method} /contracts')
 
@@ -53,6 +55,7 @@ def contracts():
 
 @contracts_bp.route('/contracts/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
+@admin_required
 def contract(id):
     logger.debug(f'{request.method} /contracts/{id}')
     if request.method == 'GET':

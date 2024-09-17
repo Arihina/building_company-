@@ -6,12 +6,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.check_post import admin_required
 
 employees_bp = Blueprint('employees_bp', __name__)
 
 
 @employees_bp.route('/employees', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def employees():
     logger.debug(f'{request.method} /employees')
 
@@ -53,6 +55,7 @@ def employees():
 
 @employees_bp.route('/employees/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
+@admin_required
 def employee(id):
     logger.debug(f'{request.method} /employees/{id}')
     if request.method == 'GET':

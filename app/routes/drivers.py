@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.check_post import admin_required
 from ..services.drivers import DriverService
 
 drivers_bp = Blueprint('drivers_bp', __name__)
@@ -12,6 +13,7 @@ drivers_bp = Blueprint('drivers_bp', __name__)
 
 @drivers_bp.route('/drivers', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def drivers():
     logger.debug(f'{request.method} /drivers')
 
@@ -44,6 +46,7 @@ def drivers():
 
 @drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @login_required
+@admin_required
 def driver(id):
     logger.debug(f'{request.method} /drivers/{id}')
     if request.method == 'GET':

@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..services.check_post import manager_required
 from ..services.clients import ClientService
 from ..services.drivers import DriverService
 from ..services.orders import OrdersService
@@ -17,6 +18,7 @@ managers_bp = Blueprint('managers_bp', __name__)
 
 @managers_bp.route('/managers/<int:id>', methods=['GET'])
 @login_required
+@manager_required
 def profile(id):
     logger.debug(f'{request.method} /managers/{id}')
 
@@ -40,6 +42,7 @@ def profile(id):
 
 @managers_bp.route('/managers/<int:id>/orders/<int:order_id>', methods=['GET', 'PUT'])
 @login_required
+@manager_required
 def update_order(id, order_id):
     if request.method == 'PUT':
         try:
@@ -77,6 +80,7 @@ def update_order(id, order_id):
 
 @managers_bp.route('/managers/<int:id>/orders', methods=['GET', 'POST'])
 @login_required
+@manager_required
 def processing_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders')
 
@@ -138,6 +142,7 @@ def processing_orders(id):
 
 @managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])
 @login_required
+@manager_required
 def completes_orders(id):
     logger.debug(f'{request.method} /managers/{id}/orders/completes')
 
@@ -168,6 +173,7 @@ def completes_orders(id):
 
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])
 @login_required
+@manager_required
 def managers_clients(id):
     logger.debug(f'{request.method} /managers/{id}/clients')
 
@@ -211,6 +217,7 @@ def managers_clients(id):
 
 @managers_bp.route('/managers/<int:id>/drivers', methods=['GET'])
 @login_required
+@manager_required
 def managers_drivers(id):
     logger.debug(f'{request.method} /managers/{id}/drivers')
 
@@ -224,6 +231,7 @@ def managers_drivers(id):
 
 @managers_bp.route('/managers/<int:id>/products', methods=['GET'])
 @login_required
+@manager_required
 def managers_products(id):
     logger.debug(f'{request.method} /managers/{id}/products')
 
@@ -238,6 +246,7 @@ def managers_products(id):
 
 @managers_bp.route('/managers/<int:id>/clients/all', methods=['GET'])
 @login_required
+@manager_required
 def all_clients(id):
     try:
         clients = ClientService.get_clients()
