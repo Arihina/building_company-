@@ -6,6 +6,7 @@ from logging import getLogger
 from flask import Flask
 from flask_cors import CORS
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 from config import settings
@@ -17,6 +18,7 @@ app.config['SECRET_KEY'] = settings.app_secret_key
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
+migrate = Migrate(app, db)
 CORS(app)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
