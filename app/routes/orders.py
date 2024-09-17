@@ -22,7 +22,7 @@ def orders():
                 driver_id=request.form.get('driver_id'),
                 prepayment=request.form.get('prepayment'),
                 product_volume=request.form.get('product_volume'),
-                status=False if (request.form.get('status') == '0' or request.form.get('status') == 'False') else True
+                status=False
             )
 
             db.session.add(order)

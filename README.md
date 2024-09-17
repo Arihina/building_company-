@@ -1,6 +1,6 @@
-## Pet Project
+# Pet Project
 
 
-# Backend: python - flask + sqlalchemy
-# Data format - json
-# Frontend: - 
+## Backend: python (flask + sqlalchemy)
+## DBMS (Database Management System): PostgreSQL
+## Frontend: HTML (jinja) + CSS + JavaScript

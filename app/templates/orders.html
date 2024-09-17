@@ -8,16 +8,16 @@
 <body>
 <h1>Заказы</h1>
 {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+{% if messages %}
+<div class="flash-messages">
+    {% for category, message in messages %}
+    <div class="flash {{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 <div class="container">
     <form action="{{ url_for('orders_bp.orders') }}" method="post">
         <fieldset>
@@ -39,9 +39,6 @@
 
             <label for="product_volume">Объём продукта:</label>
             <input type="text" id="product_volume" name="product_volume" required>
-
-            <label for="status">Статус доставки:</label>
-            <input type="text" id="status" name="status" required>
 
             <button type="submit">Добавить</button>
         </fieldset>
