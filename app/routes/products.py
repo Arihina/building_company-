@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from flask_login import login_required
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -10,6 +11,7 @@ products_bp = Blueprint('products_bp', __name__)
 
 
 @products_bp.route('/products', methods=['GET', 'POST'])
+@login_required
 def products():
     logger.debug(f'{request.method} /products')
 
@@ -51,6 +53,7 @@ def products():
 
 
 @products_bp.route('/products/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def product(id):
     logger.debug(f'{request.method} /products/{id}')
     if request.method == 'GET':

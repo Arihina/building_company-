@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
@@ -10,6 +11,7 @@ drivers_bp = Blueprint('drivers_bp', __name__)
 
 
 @drivers_bp.route('/drivers', methods=['GET', 'POST'])
+@login_required
 def drivers():
     logger.debug(f'{request.method} /drivers')
 
@@ -40,7 +42,8 @@ def drivers():
         abort(500)
 
 
-@drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE', 'POST'])
+@drivers_bp.route('/drivers/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def driver(id):
     logger.debug(f'{request.method} /drivers/{id}')
     if request.method == 'GET':

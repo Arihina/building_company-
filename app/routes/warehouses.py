@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from flask_login import login_required
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -10,6 +11,7 @@ warehouses_bp = Blueprint('warehouses_bp', __name__)
 
 
 @warehouses_bp.route('/warehouses', methods=['GET', 'POST'])
+@login_required
 def warehouses():
     logger.debug(f'{request.method} /warehouses')
 
@@ -49,6 +51,7 @@ def warehouses():
 
 
 @warehouses_bp.route('/warehouses/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def warehouse(id):
     logger.debug(f'{request.method} /warehouses/{id}')
     if request.method == 'GET':

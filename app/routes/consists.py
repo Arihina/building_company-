@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from flask_login import login_required
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -10,6 +11,7 @@ consists_bp = Blueprint('consists_bp', __name__)
 
 
 @consists_bp.route('/consists', methods=['GET', 'POST'])
+@login_required
 def consists():
     logger.debug(f'{request.method} /consists')
 
@@ -51,6 +53,7 @@ def consists():
 
 
 @consists_bp.route('/consists/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def consist(id):
     logger.debug(f'{request.method} /consists/{id}')
     if request.method == 'GET':

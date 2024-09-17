@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from flask_login import login_required
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -10,6 +11,7 @@ contracts_bp = Blueprint('contracts_bp', __name__)
 
 
 @contracts_bp.route('/contracts', methods=['GET', 'POST'])
+@login_required
 def contracts():
     logger.debug(f'{request.method} /contracts')
 
@@ -50,6 +52,7 @@ def contracts():
 
 
 @contracts_bp.route('/contracts/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def contract(id):
     logger.debug(f'{request.method} /contracts/{id}')
     if request.method == 'GET':

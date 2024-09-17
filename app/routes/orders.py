@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, jsonify, request, render_template, flash, redirect, url_for
+from flask_login import login_required
 from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
@@ -10,6 +11,7 @@ orders_bp = Blueprint('orders_bp', __name__)
 
 
 @orders_bp.route('/orders', methods=['GET', 'POST'])
+@login_required
 def orders():
     logger.debug(f'{request.method} /orders')
 
@@ -45,6 +47,7 @@ def orders():
 
 
 @orders_bp.route('/orders/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def order(id):
     logger.debug(f'{request.method} /orders/{id}')
     if request.method == 'GET':
