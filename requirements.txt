@@ -1,1 +1,10 @@
-poetry
+flask
+pydantic
+pydantic-settings
+flask-sqlalchemy
+psycopg=="3.2.1"
+psycopg-binary
+flask-cors
+flask-login
+requests
+flask-migrate
