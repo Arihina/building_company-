@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, request
-from flask_login import logout_user, current_user, login_user
+from flask_login import logout_user, current_user, login_user, login_required
 
 from app import login_manager
 from .. import models
@@ -32,6 +32,7 @@ def login():
 
 
 @auth_bp.route('/logout')
+@login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('auth_bp.login'))

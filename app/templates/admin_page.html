@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Панель администратора</h1>
-<a href="{{ url_for('info_bp.index') }}" class="top-right-link">Выйти</a>
+<a href="{{ url_for('auth_bp.logout') }}" class="top-right-link">Выйти</a>
 <div class="container">
     <a href="{{ url_for('clients_bp.clients') }}" class="button">Клиенты</a>
     <a href="{{ url_for('employees_bp.employees')}}" class="button">Сотрудники</a>

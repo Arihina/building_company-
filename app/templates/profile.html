@@ -10,7 +10,7 @@
 <h3>ФИО: {{m.full_name}}</h3>
 <h3>Email: {{m.email}}</h3>
 <h3>Номер телефона: {{m.phone_number}}</h3>
-<a href="{{ url_for('info_bp.index') }}" class="top-right-link">Выйти</a>
+<a href="{{ url_for('auth_bp.logout') }}" class="top-right-link">Выйти</a>
 <div class="container">
     <a href="{{ url_for('managers_bp.managers_clients', id=id) }}" class="button">Клиенты</a>
     <a href="{{ url_for('managers_bp.managers_drivers', id=id) }}" class="button">Водители</a>
