@@ -1,5 +1,5 @@
-body {
-    background-color: #121212;
+.block {
+    background-color: rgba(18, 18, 18, 0.8);
     color: white;
     font-family: 'Arial', sans-serif;
     text-rendering: optimizeLegibility;

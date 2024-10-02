@@ -6,32 +6,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="../static/js/scripts.js" defer></script>
 </head>
-<body>
-<h1>Товар № {{ product.id }}</h1>
-<div class="container">
-    <div class="form-card">
-        <form>
-            <div class="field">
-                <label for="name">Наименование:</label>
-                <input type="text" id="name" name="name" value="{{product.name}}" required>
-            </div>
-            <div class="field">
-                <label for="type">Тип:</label>
-                <input type="text" id="type" name="type" value="{{product.type}}" required>
-            </div>
-            <div class="field">
-                <label for="price">Цена:</label>
-                <input type="text" id="price" name="price" value="{{ product.price }}" required>
-            </div>
-            <div class="field">
-                <label for="unit_type">Единица измерения:</label>
-                <input type="text" id="unit_type" name="unit_type" value="{{ product.unit_type }}" required>
-            </div>
-            <div class="form-actions">
-                <button onclick="updateProduct(event)">Изменить</button>
-            </div>
-        </form>
-        <button onclick="deleteProduct({{product.id}})">Удалить</button>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Товар № {{ product.id }}</h1>
+    <div class="container">
+        <div class="form-card">
+            <form>
+                <div class="field">
+                    <label for="name">Наименование:</label>
+                    <input type="text" id="name" name="name" value="{{product.name}}" required>
+                </div>
+                <div class="field">
+                    <label for="type">Тип:</label>
+                    <input type="text" id="type" name="type" value="{{product.type}}" required>
+                </div>
+                <div class="field">
+                    <label for="price">Цена:</label>
+                    <input type="text" id="price" name="price" value="{{ product.price }}" required>
+                </div>
+                <div class="field">
+                    <label for="unit_type">Единица измерения:</label>
+                    <input type="text" id="unit_type" name="unit_type" value="{{ product.unit_type }}" required>
+                </div>
+                <div class="form-actions">
+                    <button onclick="updateProduct(event)">Изменить</button>
+                </div>
+            </form>
+            <button onclick="deleteProduct({{product.id}})">Удалить</button>
+        </div>
     </div>
 </div>
 </body>

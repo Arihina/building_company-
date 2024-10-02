@@ -5,58 +5,60 @@
     <title>Сотрудники</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Сотрудники</h1>
-{% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-<div class="container">
-    <form action="{{ url_for('employees_bp.employees') }}" method="post">
-        <fieldset>
-            <legend>Добавить сотрудника</legend>
-            <label for="full_name">ФИО:</label>
-            <input type="text" id="full_name" name="full_name" required>
-
-            <label for="phone_number">Номер телефона:</label>
-            <input type="text" id="phone_number" name="phone_number" required>
-
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-
-            <label for="post">Должность:</label>
-            <input type="text" id="post" name="post" required>
-
-            <button type="submit">Добавить</button>
-        </fieldset>
-    </form>
-</div>
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>№</th>
-            <th>ФИО</th>
-            <th>Номер телефона</th>
-            <th>Email</th>
-            <th>Должность</th>
-        </tr>
-        {% for empl in employees %}
-        <tr onclick="window.location='/employees/{{empl.id}}';">
-            <td>{{empl.id}}</td>
-            <td>{{empl.full_name}}</td>
-            <td>{{empl.phone_number}}</td>
-            <td>{{empl.email}}</td>
-            <td>{{empl.post}}</td>
-        </tr>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Сотрудники</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </table>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <form action="{{ url_for('employees_bp.employees') }}" method="post">
+            <fieldset>
+                <legend>Добавить сотрудника</legend>
+                <label for="full_name">ФИО:</label>
+                <input type="text" id="full_name" name="full_name" required>
+
+                <label for="phone_number">Номер телефона:</label>
+                <input type="text" id="phone_number" name="phone_number" required>
+
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
+
+                <label for="post">Должность:</label>
+                <input type="text" id="post" name="post" required>
+
+                <button type="submit">Добавить</button>
+            </fieldset>
+        </form>
+    </div>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№</th>
+                <th>ФИО</th>
+                <th>Номер телефона</th>
+                <th>Email</th>
+                <th>Должность</th>
+            </tr>
+            {% for empl in employees %}
+            <tr onclick="window.location='/employees/{{empl.id}}';">
+                <td>{{empl.id}}</td>
+                <td>{{empl.full_name}}</td>
+                <td>{{empl.phone_number}}</td>
+                <td>{{empl.email}}</td>
+                <td>{{empl.post}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 </body>
 </html>

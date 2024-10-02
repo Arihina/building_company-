@@ -5,22 +5,24 @@
     <title>Панель управления администратора</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Панель администратора</h1>
-<a href="{{ url_for('auth_bp.logout') }}" class="top-right-link">Выйти</a>
-<div class="container">
-    <a href="{{ url_for('clients_bp.clients') }}" class="button">Клиенты</a>
-    <a href="{{ url_for('employees_bp.employees')}}" class="button">Сотрудники</a>
-    <a href="{{ url_for('drivers_bp.drivers') }}" class="button">Водители</a>
-</div>
-<div class="container">
-    <a href="{{ url_for('orders_bp.orders') }}" class="button">Заказы</a>
-    <a href="{{ url_for('contracts_bp.contracts') }}" class="button">Контракты</a>
-    <a href="{{ url_for('consists_bp.consists') }}" class="button">Содержания контрактов</a>
-</div>
-<div class="container">
-    <a href="{{ url_for('products_bp.products') }}" class="button">Товары</a>
-    <a href="{{ url_for('warehouses_bp.warehouses') }}" class="button">Склады</a>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Панель администратора</h1>
+    <a href="{{ url_for('auth_bp.logout') }}" class="top-right-link">Выйти</a>
+    <div class="container">
+        <a href="{{ url_for('clients_bp.clients') }}" class="button">Клиенты</a>
+        <a href="{{ url_for('employees_bp.employees')}}" class="button">Сотрудники</a>
+        <a href="{{ url_for('drivers_bp.drivers') }}" class="button">Водители</a>
+    </div>
+    <div class="container">
+        <a href="{{ url_for('orders_bp.orders') }}" class="button">Заказы</a>
+        <a href="{{ url_for('contracts_bp.contracts') }}" class="button">Контракты</a>
+        <a href="{{ url_for('consists_bp.consists') }}" class="button">Содержания контрактов</a>
+    </div>
+    <div class="container">
+        <a href="{{ url_for('products_bp.products') }}" class="button">Товары</a>
+        <a href="{{ url_for('warehouses_bp.warehouses') }}" class="button">Склады</a>
+    </div>
 </div>
 </body>
 </html>
