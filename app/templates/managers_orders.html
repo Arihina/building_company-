@@ -5,94 +5,96 @@
     <title>Заказы</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Заказы в работе</h1>
-{% with messages = get_flashed_messages(with_categories=True) %}
-{% if messages %}
-<div class="flash-messages">
-    {% for category, message in messages %}
-    <div class="flash {{ category }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% endwith %}
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>№ заказа</th>
-            <th>ФИО клиента</th>
-            <th>ФИО водителя</th>
-            <th>Товар</th>
-            <th>Объём</th>
-            <th>Дата</th>
-            <th>Адрес доставки</th>
-            <th>Склад</th>
-            <th>Сумма</th>
-        </tr>
-        {% for order in orders %}
-        <tr onclick="window.location='orders/{{order.id}}';">
-            <td>{{order.id}}</td>
-            <td>{{order.client_name}}</td>
-            <td>{{order.driver_name}}</td>
-            <td>{{order.product_name}}</td>
-            <td>{{order.product_volume}}</td>
-            <td>{{order.data}}</td>
-            <td>{{order.deliver_address}}</td>
-            <td>{{order.warehouse_address}}</td>
-            <td>{{order.order_amount}}</td>
-        </tr>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Заказы в работе</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </table>
-</div>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№ заказа</th>
+                <th>ФИО клиента</th>
+                <th>ФИО водителя</th>
+                <th>Товар</th>
+                <th>Объём</th>
+                <th>Дата</th>
+                <th>Адрес доставки</th>
+                <th>Склад</th>
+                <th>Сумма</th>
+            </tr>
+            {% for order in orders %}
+            <tr onclick="window.location='orders/{{order.id}}';">
+                <td>{{order.id}}</td>
+                <td>{{order.client_name}}</td>
+                <td>{{order.driver_name}}</td>
+                <td>{{order.product_name}}</td>
+                <td>{{order.product_volume}}</td>
+                <td>{{order.data}}</td>
+                <td>{{order.deliver_address}}</td>
+                <td>{{order.warehouse_address}}</td>
+                <td>{{order.order_amount}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-<div class="container">
-    <form action="{{ url_for('managers_bp.processing_orders', id=id) }}" method="post">
-        <fieldset>
-            <legend>Добавить заказ</legend>
-            <label for="client_name">ФИО клиента:</label>
-            <input type="text" id="client_name" name="client_name" value="">
+    <div class="container">
+        <form action="{{ url_for('managers_bp.processing_orders', id=id) }}" method="post">
+            <fieldset>
+                <legend>Добавить заказ</legend>
+                <label for="client_name">ФИО клиента:</label>
+                <input type="text" id="client_name" name="client_name" value="">
 
-            <label for="client_id">или № клиента:</label>
-            <input type="text" id="client_id" name="client_id" value="">
+                <label for="client_id">или № клиента:</label>
+                <input type="text" id="client_id" name="client_id" value="">
 
-            <label for="product_name">Наименование товара:</label>
-            <input type="text" id="product_name" name="product_name" value="">
+                <label for="product_name">Наименование товара:</label>
+                <input type="text" id="product_name" name="product_name" value="">
 
-            <label for="product_id">или № товара:</label>
-            <input type="text" id="product_id" name="product_id" value="">
+                <label for="product_id">или № товара:</label>
+                <input type="text" id="product_id" name="product_id" value="">
 
-            <label for="driver_name">ФИО водителя:</label>
-            <input type="text" id="driver_name" name="driver_name" value="">
+                <label for="driver_name">ФИО водителя:</label>
+                <input type="text" id="driver_name" name="driver_name" value="">
 
-            <label for="driver_id">или № водителя:</label>
-            <input type="text" id="driver_id" name="driver_id" value="">
+                <label for="driver_id">или № водителя:</label>
+                <input type="text" id="driver_id" name="driver_id" value="">
 
-            <label for="warehouse_id">№ склада:</label>
-            <input type="text" id="warehouse_id" name="warehouse_id" required>
+                <label for="warehouse_id">№ склада:</label>
+                <input type="text" id="warehouse_id" name="warehouse_id" required>
 
-            <label for="delivery_address">Адрес доставки:</label>
-            <input type="text" id="delivery_address" name="delivery_address" required>
+                <label for="delivery_address">Адрес доставки:</label>
+                <input type="text" id="delivery_address" name="delivery_address" required>
 
-            <label for="product_volume">Объём заказа:</label>
-            <input type="text" id="product_volume" name="product_volume" required>
+                <label for="product_volume">Объём заказа:</label>
+                <input type="text" id="product_volume" name="product_volume" required>
 
-            <label for="data">Дата:</label>
-            <input type="text" id="data" name="data" required>
+                <label for="data">Дата:</label>
+                <input type="text" id="data" name="data" required>
 
-            <label for="order_amount">Сумма:</label>
-            <input type="text" id="order_amount" name="order_amount" required>
+                <label for="order_amount">Сумма:</label>
+                <input type="text" id="order_amount" name="order_amount" required>
 
-            <label for="prepayment">Предоплата:</label>
-            <input type="text" id="prepayment" name="prepayment" required>
+                <label for="prepayment">Предоплата:</label>
+                <input type="text" id="prepayment" name="prepayment" required>
 
-            <label for="account_number">Номер счёта:</label>
-            <input type="text" id="account_number" name="account_number" required>
+                <label for="account_number">Номер счёта:</label>
+                <input type="text" id="account_number" name="account_number" required>
 
-            <button type="submit">Добавить</button>
-        </fieldset>
-    </form>
+                <button type="submit">Добавить</button>
+            </fieldset>
+        </form>
+    </div>
 </div>
 
 <script>

@@ -5,18 +5,20 @@
     <title>Профиль</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Профиль</h1>
-<h3>ФИО: {{m.full_name}}</h3>
-<h3>Email: {{m.email}}</h3>
-<h3>Номер телефона: {{m.phone_number}}</h3>
-<a href="{{ url_for('info_bp.index') }}" class="top-right-link">Выйти</a>
-<div class="container">
-    <a href="{{ url_for('managers_bp.managers_clients', id=id) }}" class="button">Клиенты</a>
-    <a href="{{ url_for('managers_bp.managers_drivers', id=id) }}" class="button">Водители</a>
-    <a href="{{ url_for('managers_bp.managers_products', id=id) }}" class="button">Товары</a>
-    <a href="{{ url_for('managers_bp.completes_orders', id=id) }}" class="button">Завершённые заказы</a>
-    <a href="{{ url_for('managers_bp.processing_orders', id=id) }}" class="button">Текущие заказы</a>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Профиль</h1>
+    <h3>ФИО: {{m.full_name}}</h3>
+    <h3>Email: {{m.email}}</h3>
+    <h3>Номер телефона: {{m.phone_number}}</h3>
+    <a href="{{ url_for('info_bp.index') }}" class="top-right-link">Выйти</a>
+    <div class="container">
+        <a href="{{ url_for('managers_bp.managers_clients', id=id) }}" class="button">Клиенты</a>
+        <a href="{{ url_for('managers_bp.managers_drivers', id=id) }}" class="button">Водители</a>
+        <a href="{{ url_for('managers_bp.managers_products', id=id) }}" class="button">Товары</a>
+        <a href="{{ url_for('managers_bp.completes_orders', id=id) }}" class="button">Завершённые заказы</a>
+        <a href="{{ url_for('managers_bp.processing_orders', id=id) }}" class="button">Текущие заказы</a>
+    </div>
 </div>
 </body>
 </html>

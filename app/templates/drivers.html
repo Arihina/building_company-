@@ -5,53 +5,55 @@
     <title>Водители</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Водители</h1>
-{% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-<div class="container">
-    <form action="{{ url_for('drivers_bp.drivers') }}" method="post">
-        <fieldset>
-            <legend>Добавить водителя</legend>
-            <label for="full_name">ФИО:</label>
-            <input type="text" id="full_name" name="full_name" required>
-
-            <label for="phone_number">Номер телефона:</label>
-            <input type="text" id="phone_number" name="phone_number" required>
-
-            <label for="car_type">Тип машины:</label>
-            <input type="text" id="car_type" name="car_type" required>
-
-            <button type="submit">Добавить</button>
-        </fieldset>
-    </form>
-</div>
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>№</th>
-            <th>ФИО</th>
-            <th>Номер телефона</th>
-            <th>Тип машины</th>
-        </tr>
-        {% for driver in drivers %}
-        <tr onclick="window.location='/drivers/{{driver.id}}';">
-            <td>{{driver.id}}</td>
-            <td>{{driver.full_name}}</td>
-            <td>{{driver.phone_number}}</td>
-            <td>{{driver.car_type}}</td>
-        </tr>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Водители</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </table>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <form action="{{ url_for('drivers_bp.drivers') }}" method="post">
+            <fieldset>
+                <legend>Добавить водителя</legend>
+                <label for="full_name">ФИО:</label>
+                <input type="text" id="full_name" name="full_name" required>
+
+                <label for="phone_number">Номер телефона:</label>
+                <input type="text" id="phone_number" name="phone_number" required>
+
+                <label for="car_type">Тип машины:</label>
+                <input type="text" id="car_type" name="car_type" required>
+
+                <button type="submit">Добавить</button>
+            </fieldset>
+        </form>
+    </div>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№</th>
+                <th>ФИО</th>
+                <th>Номер телефона</th>
+                <th>Тип машины</th>
+            </tr>
+            {% for driver in drivers %}
+            <tr onclick="window.location='/drivers/{{driver.id}}';">
+                <td>{{driver.id}}</td>
+                <td>{{driver.full_name}}</td>
+                <td>{{driver.phone_number}}</td>
+                <td>{{driver.car_type}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 </body>
 </html>

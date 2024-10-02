@@ -5,53 +5,55 @@
     <title>Склады</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Склады</h1>
-{% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-<div class="container">
-    <form action="{{ url_for('warehouses_bp.warehouses') }}" method="post">
-        <fieldset>
-            <legend>Добавить склад</legend>
-            <label for="quantity">Кол-во товара:</label>
-            <input type="text" id="quantity" name="quantity" required>
-
-            <label for="address">Адрес:</label>
-            <input type="text" id="address" name="address" required>
-
-            <label for="product_id">№ продукта:</label>
-            <input type="text" id="product_id" name="product_id" required>
-
-            <button type="submit">Добавить</button>
-        </fieldset>
-    </form>
-</div>
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>№</th>
-            <th>Кол-во товара</th>
-            <th>Адрес</th>
-            <th>№ продукта</th>
-        </tr>
-        {% for w in warehouses %}
-        <tr onclick="window.location='/warehouses/{{w.id}}';">
-            <td>{{w.id}}</td>
-            <td>{{w.quantity}}</td>
-            <td>{{w.address}}</td>
-            <td>{{w.product_id}}</td>
-        </tr>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Склады</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </table>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <form action="{{ url_for('warehouses_bp.warehouses') }}" method="post">
+            <fieldset>
+                <legend>Добавить склад</legend>
+                <label for="quantity">Кол-во товара:</label>
+                <input type="text" id="quantity" name="quantity" required>
+
+                <label for="address">Адрес:</label>
+                <input type="text" id="address" name="address" required>
+
+                <label for="product_id">№ продукта:</label>
+                <input type="text" id="product_id" name="product_id" required>
+
+                <button type="submit">Добавить</button>
+            </fieldset>
+        </form>
+    </div>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№</th>
+                <th>Кол-во товара</th>
+                <th>Адрес</th>
+                <th>№ продукта</th>
+            </tr>
+            {% for w in warehouses %}
+            <tr onclick="window.location='/warehouses/{{w.id}}';">
+                <td>{{w.id}}</td>
+                <td>{{w.quantity}}</td>
+                <td>{{w.address}}</td>
+                <td>{{w.product_id}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 </body>
 </html>

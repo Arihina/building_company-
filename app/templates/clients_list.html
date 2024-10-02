@@ -5,55 +5,57 @@
     <title>Клиенты</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Клиенты</h1>
-{% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-<div class="container">
-    <form action="{{ url_for('managers_bp.managers_clients', id=id) }}" method="post">
-        <fieldset>
-            <legend>Добавить клиента</legend>
-            <label for="full_name">ФИО:</label>
-            <input type="text" id="full_name" name="full_name" required>
-
-            <label for="phone_number">Номер телефона:</label>
-            <input type="text" id="phone_number" name="phone_number" required>
-
-            <label for="organization_name">Фирма:</label>
-            <input type="text" id="organization_name" name="organization_name">
-
-            <button type="submit">Добавить</button>
-        </fieldset>
-    </form>
-</div>
-<h2>Клиенты с которыми работали ранее</h2>
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>ФИО</th>
-            <th>Номер телефона</th>
-            <th>Фирма</th>
-        </tr>
-        {% for client in clients %}
-        <tr>
-            <td>{{client.full_name}}</td>
-            <td>{{client.phone_number}}</td>
-            <td>{{client.organization_name}}</td>
-        </tr>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Клиенты</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </table>
-</div>
-<div class="container">
-    <a href="{{ url_for('managers_bp.all_clients', id=id) }}" class="button">Все клиенты фирмы</a>
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        <form action="{{ url_for('managers_bp.managers_clients', id=id) }}" method="post">
+            <fieldset>
+                <legend>Добавить клиента</legend>
+                <label for="full_name">ФИО:</label>
+                <input type="text" id="full_name" name="full_name" required>
+
+                <label for="phone_number">Номер телефона:</label>
+                <input type="text" id="phone_number" name="phone_number" required>
+
+                <label for="organization_name">Фирма:</label>
+                <input type="text" id="organization_name" name="organization_name">
+
+                <button type="submit">Добавить</button>
+            </fieldset>
+        </form>
+    </div>
+    <h2>Клиенты с которыми работали ранее</h2>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>ФИО</th>
+                <th>Номер телефона</th>
+                <th>Фирма</th>
+            </tr>
+            {% for client in clients %}
+            <tr>
+                <td>{{client.full_name}}</td>
+                <td>{{client.phone_number}}</td>
+                <td>{{client.organization_name}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="container">
+        <a href="{{ url_for('managers_bp.all_clients', id=id) }}" class="button">Все клиенты фирмы</a>
+    </div>
 </div>
 </body>
 </html>

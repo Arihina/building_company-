@@ -5,33 +5,35 @@
     <title>Заказы</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Завершённые заказы</h1>
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>№ заказа</th>
-            <th>ФИО клиента</th>
-            <th>ФИО водителя</th>
-            <th>Адрес доставки</th>
-            <th>Товар</th>
-            <th>Сумма</th>
-            <th>Объём</th>
-            <th>Склад</th>
-        </tr>
-        {% for order in orders %}
-        <tr>
-            <td>{{order.id}}</td>
-            <td>{{order.client_name}}</td>
-            <td>{{order.driver_name}}</td>
-            <td>{{order.deliver_address}}</td>
-            <td>{{order.product_name}}</td>
-            <td>{{order.order_amount}}</td>
-            <td>{{order.product_volume}}</td>
-            <td>{{order.warehouse_address}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Завершённые заказы</h1>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№ заказа</th>
+                <th>ФИО клиента</th>
+                <th>ФИО водителя</th>
+                <th>Адрес доставки</th>
+                <th>Товар</th>
+                <th>Сумма</th>
+                <th>Объём</th>
+                <th>Склад</th>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{order.id}}</td>
+                <td>{{order.client_name}}</td>
+                <td>{{order.driver_name}}</td>
+                <td>{{order.deliver_address}}</td>
+                <td>{{order.product_name}}</td>
+                <td>{{order.order_amount}}</td>
+                <td>{{order.product_volume}}</td>
+                <td>{{order.warehouse_address}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 </body>
 </html>

@@ -5,31 +5,33 @@
     <title>Список товаров</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-<h1>Товары и склады</h1>
-<div class="container">
-    <table class="table_dark">
-        <tr>
-            <th>№ товара</th>
-            <th>Наименование</th>
-            <th>Тип</th>
-            <th>Цена</th>
-            <th>Единица измерения</th>
-            <th>Кол-во</th>
-            <th>Адрес склада</th>
-        </tr>
-        {% for pw in pws %}
-        <tr>
-            <td>{{pw.id}}</td>
-            <td>{{pw.name}}</td>
-            <td>{{pw.type}}</td>
-            <td>{{pw.price}}</td>
-            <td>{{pw.unit_type}}</td>
-            <td>{{pw.quantity}}</td>
-            <td>{{pw.address}}</td>
-        </tr>
-        {% endfor %}
-    </table>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Товары и склады</h1>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№ товара</th>
+                <th>Наименование</th>
+                <th>Тип</th>
+                <th>Цена</th>
+                <th>Единица измерения</th>
+                <th>Кол-во</th>
+                <th>Адрес склада</th>
+            </tr>
+            {% for pw in pws %}
+            <tr>
+                <td>{{pw.id}}</td>
+                <td>{{pw.name}}</td>
+                <td>{{pw.type}}</td>
+                <td>{{pw.price}}</td>
+                <td>{{pw.unit_type}}</td>
+                <td>{{pw.quantity}}</td>
+                <td>{{pw.address}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 </body>
 </html>
