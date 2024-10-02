@@ -111,3 +111,31 @@ def contract(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@contracts_bp.route('/search/contracts/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/contracts/')
+
+    contract_consist_id = request.args.get('contract_consist_id')
+    client_id = request.args.get('client_id')
+    employee_id = request.args.get('employee_id')
+
+    query = models.Contract.query
+
+    if contract_consist_id:
+        query = query.filter(models.Contract.contract_consist_id == int(contract_consist_id))
+    if client_id:
+        query = query.filter(models.Contract.client_id == int(client_id))
+    if employee_id:
+        query = query.filter(models.Contract.employee_id == int(employee_id))
+
+    try:
+        filter_contracts = query.all()
+        return render_template('found_contracts.html', contracts=filter_contracts), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

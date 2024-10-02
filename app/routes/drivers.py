@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..models import Driver
 from ..services.check_post import admin_required
 from ..services.drivers import DriverService
 
@@ -102,3 +103,31 @@ def driver(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@drivers_bp.route('/search/drivers/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/drivers/')
+
+    full_name = request.args.get('full_name')
+    phone_number = request.args.get('phone_number')
+    car_type = request.args.get('car_type')
+
+    query = Driver.query
+
+    if full_name:
+        query = query.filter(Driver.full_name == full_name)
+    if phone_number:
+        query = query.filter(Driver.phone_number == phone_number)
+    if car_type:
+        query = query.filter(Driver.car_type == car_type)
+
+    try:
+        filter_drivers = query.all()
+        return render_template('found_drivers.html', drivers=filter_drivers), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

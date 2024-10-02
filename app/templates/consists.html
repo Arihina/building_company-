@@ -19,6 +19,21 @@
     </div>
     {% endif %}
     {% endwith %}
+    <div class="search">
+        <form action="{{ url_for('consists_bp.search') }}" method="get" novalidate>
+            <legend>Поиск</legend>
+            <label for="data">Дата:</label>
+            <input type="text" name="data">
+
+            <label for="order_amount">Сумма заказа:</label>
+            <input type="text" name="order_amount">
+
+            <label for="account_number">Номер счёта:</label>
+            <input type="text" name="account_number">
+
+            <button type="submit">Найти</button>
+        </form>
+    </div>
     <div class="container">
         <form action="{{ url_for('consists_bp.consists') }}" method="post">
             <fieldset>

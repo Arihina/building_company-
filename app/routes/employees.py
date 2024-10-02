@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..models import Employee
 from ..services.check_post import admin_required
 
 employees_bp = Blueprint('employees_bp', __name__)
@@ -112,3 +113,34 @@ def employee(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@employees_bp.route('/search/employees/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/employees/')
+
+    full_name = request.args.get('full_name')
+    phone_number = request.args.get('phone_number')
+    post = request.args.get('post')
+    email = request.args.get('email')
+
+    query = Employee.query
+
+    if full_name:
+        query = query.filter(Employee.full_name == full_name)
+    if phone_number:
+        query = query.filter(Employee.phone_number == phone_number)
+    if post:
+        query = query.filter(Employee.post == post)
+    if email:
+        query = query.filter(Employee.email == email)
+
+    try:
+        filter_employees = query.all()
+        return render_template('found_employees.html', employees=filter_employees), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

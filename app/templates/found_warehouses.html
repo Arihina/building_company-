@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты поиска</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Результаты поиска</h1>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№</th>
+                <th>Кол-во товара</th>
+                <th>Адрес</th>
+                <th>№ продукта</th>
+            </tr>
+            {% for w in warehouses %}
+            <tr onclick="window.location='/warehouses/{{w.id}}';">
+                <td>{{w.id}}</td>
+                <td>{{w.quantity}}</td>
+                <td>{{w.address}}</td>
+                <td>{{w.product_id}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>

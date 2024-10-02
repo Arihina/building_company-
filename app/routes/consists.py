@@ -114,3 +114,31 @@ def consist(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@consists_bp.route('/search/consists/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/consists/')
+
+    data = request.args.get('data')
+    order_amount = request.args.get('order_amount')
+    account_number = request.args.get('account_number')
+
+    query = models.Consist.query
+
+    if data:
+        query = query.filter(models.Consist.data == data)
+    if order_amount:
+        query = query.filter(models.Consist.order_amount == float(order_amount))
+    if account_number:
+        query = query.filter(models.Consist.account_number == account_number)
+
+    try:
+        filter_consists = query.all()
+        return render_template('found_consists.html', consists=filter_consists), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

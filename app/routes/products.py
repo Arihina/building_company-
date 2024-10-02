@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..models import Product
 from ..services.check_post import admin_required
 
 products_bp = Blueprint('products_bp', __name__)
@@ -114,3 +115,34 @@ def product(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@products_bp.route('/search/products/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/products/')
+
+    name = request.args.get('name')
+    p_type = request.args.get('type')
+    price = request.args.get('price')
+    unit_type = request.args.get('unit_type')
+
+    query = Product.query
+
+    if name:
+        query = query.filter(Product.name == name)
+    if p_type:
+        query = query.filter(Product.type == p_type)
+    if price:
+        query = query.filter(Product.price == float(price))
+    if unit_type:
+        query = query.filter(Product.unit_type == unit_type)
+
+    try:
+        filter_products = query.all()
+        return render_template('found_products.html', products=filter_products), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

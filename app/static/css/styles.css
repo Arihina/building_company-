@@ -307,3 +307,19 @@ textarea {
     background-color: #ec971f;
 }
 
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.search form {
+  display: flex;
+  align-items: center;
+}
+
+.search label, .search input, .search button {
+  margin-right: 10px;
+  margin-left: 10px;
+}

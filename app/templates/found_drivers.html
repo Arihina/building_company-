@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты поиска</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
+<div class="block">
+    <h1>Результаты поиска</h1>
+    <div class="container">
+        <table class="table_dark">
+            <tr>
+                <th>№</th>
+                <th>ФИО</th>
+                <th>Номер телефона</th>
+                <th>Тип машины</th>
+            </tr>
+            {% for driver in drivers %}
+            <tr onclick="window.location='/drivers/{{driver.id}}';">
+                <td>{{driver.id}}</td>
+                <td>{{driver.full_name}}</td>
+                <td>{{driver.phone_number}}</td>
+                <td>{{driver.car_type}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>

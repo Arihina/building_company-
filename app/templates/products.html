@@ -19,6 +19,24 @@
     </div>
     {% endif %}
     {% endwith %}
+    <div class="search">
+        <form action="{{ url_for('products_bp.search') }}" method="get" novalidate>
+            <legend>Поиск</legend>
+            <label for="name">Наименование:</label>
+            <input type="text" name="name">
+
+            <label for="type">Тип:</label>
+            <input type="text" name="type">
+
+            <label for="price">Цена:</label>
+            <input type="text" name="price">
+
+            <label for="unit_type">Единица измерения:</label>
+            <input type="text" name="unit_type">
+
+            <button type="submit">Найти</button>
+        </form>
+    </div>
     <div class="container">
         <form action="{{ url_for('products_bp.products') }}" method="post">
             <fieldset>

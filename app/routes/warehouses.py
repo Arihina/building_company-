@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..models import Warehouse
 from ..services.check_post import admin_required
 
 warehouses_bp = Blueprint('warehouses_bp', __name__)
@@ -110,3 +111,31 @@ def warehouse(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@warehouses_bp.route('/search/warehouses/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/warehouses/')
+
+    quantity = request.args.get('quantity')
+    address = request.args.get('address')
+    product_id = request.args.get('product_id')
+
+    query = Warehouse.query
+
+    if quantity:
+        query = query.filter(Warehouse.quantity == int(quantity))
+    if address:
+        query = query.filter(Warehouse.address == address)
+    if product_id:
+        query = query.filter(Warehouse.product_id == int(product_id))
+
+    try:
+        filter_warehouses = query.all()
+        return render_template('found_warehouses.html', warehouses=filter_warehouses), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

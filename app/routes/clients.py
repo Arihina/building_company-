@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from .. import db, logger
 from .. import schemas
+from ..models import Client
 from ..services.check_post import admin_required
 from ..services.clients import ClientService
 
@@ -91,3 +92,31 @@ def client(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@clients_bp.route('/search/clients/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/clients/')
+
+    full_name = request.args.get('full_name')
+    phone_number = request.args.get('phone_number')
+    organization_name = request.args.get('organization_name')
+
+    query = Client.query
+
+    if full_name:
+        query = query.filter(Client.full_name == full_name)
+    if phone_number:
+        query = query.filter(Client.phone_number == phone_number)
+    if organization_name:
+        query = query.filter(Client.organization_name == organization_name)
+
+    try:
+        filter_clients = query.all()
+        return render_template('found_clients.html', clients=filter_clients), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)

@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from .. import db, logger
 from .. import models
 from .. import schemas
+from ..models import Orders
 from ..services.check_post import admin_required
 from ..services.orders import OrdersService
 
@@ -93,3 +94,40 @@ def order(id):
             db.session.rollback()
             logger.exception(ex)
             abort(500)
+
+
+@orders_bp.route('/search/orders/', methods=['GET'])
+@login_required
+@admin_required
+def search():
+    logger.debug(f'{request.method} /search/employees/')
+
+    contract_id = request.args.get('contract_id')
+    warehouse_id = request.args.get('warehouse_id')
+    driver_id = request.args.get('driver_id')
+    delivery_address = request.args.get('delivery_address')
+    prepayment = request.args.get('prepayment')
+    product_volume = request.args.get('product_volume')
+
+    query = Orders.query
+
+    if contract_id:
+        query = query.filter(Orders.contract_id == int(contract_id))
+    if warehouse_id:
+        query = query.filter(Orders.warehouse_id == int(warehouse_id))
+    if driver_id:
+        query = query.filter(Orders.driver_id == int(driver_id))
+    if delivery_address:
+        query = query.filter(Orders.delivery_address == delivery_address)
+    if prepayment:
+        query = query.filter(Orders.prepayment == float(prepayment))
+    if product_volume:
+        query = query.filter(Orders.product_volume == int(product_volume))
+
+    try:
+        filter_orders = query.all()
+        return render_template('found_orders.html', orders=filter_orders), 200
+
+    except SQLAlchemyError as ex:
+        logger.exception(ex)
+        abort(500)
