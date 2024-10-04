@@ -8,6 +8,21 @@
 <body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
 <div class="block">
     <h1>Клиенты</h1>
+    <div class="search">
+        <form action="{{ url_for('clients_bp.search') }}" method="get" novalidate>
+            <legend>Поиск</legend>
+            <label for="full_name">ФИО:</label>
+            <input type="text" name="full_name">
+
+            <label for="phone_number">Номер телефона:</label>
+            <input type="text" name="phone_number">
+
+            <label for="organization_name">Фирма:</label>
+            <input type="text" name="organization_name">
+
+            <button type="submit">Найти</button>
+        </form>
+    </div>
     <div class="container">
         <table class="table_dark">
             <tr>

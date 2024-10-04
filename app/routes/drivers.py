@@ -107,7 +107,6 @@ def driver(id):
 
 @drivers_bp.route('/search/drivers/', methods=['GET'])
 @login_required
-@admin_required
 def search():
     logger.debug(f'{request.method} /search/drivers/')
 

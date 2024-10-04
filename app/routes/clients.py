@@ -96,7 +96,6 @@ def client(id):
 
 @clients_bp.route('/search/clients/', methods=['GET'])
 @login_required
-@admin_required
 def search():
     logger.debug(f'{request.method} /search/clients/')
 

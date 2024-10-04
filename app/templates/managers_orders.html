@@ -19,6 +19,30 @@
     </div>
     {% endif %}
     {% endwith %}
+    <div class="search">
+        <form action="{{ url_for('managers_bp.search_orders', id=id) }}" method="get" novalidate>
+            <legend>Поиск</legend>
+            <label for="client_name">ФИО клиента:</label>
+            <input type="text" name="client_name">
+
+            <label for="product_name">Наименование товара:</label>
+            <input type="text" name="product_name">
+
+            <label for="driver_name">ФИО водителя:</label>
+            <input type="text" name="driver_name">
+
+            <label for="delivery_address">Адрес доставки:</label>
+            <input type="text" name="delivery_address">
+
+            <label for="product_volume">Объём заказа:</label>
+            <input type="text" name="product_volume">
+
+            <label for="order_amount">Сумма:</label>
+            <input type="text" name="order_amount">
+
+            <button type="submit">Найти</button>
+        </form>
+    </div>
     <div class="container">
         <table class="table_dark">
             <tr>

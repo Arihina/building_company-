@@ -140,6 +140,38 @@ def processing_orders(id):
         abort(500)
 
 
+@managers_bp.route('/managers/<int:id>/orders/search', methods=['GET'])
+@login_required
+@manager_required
+def search_orders(id):
+    logger.debug(f'{request.method} /managers/{id}/orders/search')
+
+    incomplete_orders = OrdersService.get_orders_by_manager_id_filter(id, False,
+                                                                      request.args.get('client_name'),
+                                                                      request.args.get('driver_name'),
+                                                                      request.args.get('product_name'),
+                                                                      request.args.get('delivery_address'),
+                                                                      request.args.get('product_volume'),
+                                                                      request.args.get('order_amount'))
+
+    incomplete_orders_dto = [
+        schemas.OrderDto(
+            id=order.id,
+            client_name=order.client_name,
+            driver_name=order.driver_name,
+            product_name=order.product_name,
+            product_volume=order.product_volume,
+            data=order.data,
+            deliver_address=order.delivery_address,
+            warehouse_address=order.warehouse_address,
+            order_amount=order.order_amount
+        ).dict()
+        for order in incomplete_orders
+    ]
+
+    return render_template('managers_orders_search.html', orders=incomplete_orders_dto, id=id), 200
+
+
 @managers_bp.route('/managers/<int:id>/orders/completes', methods=['GET'])
 @login_required
 @manager_required
@@ -164,11 +196,43 @@ def completes_orders(id):
             for order in complete_orders
         ]
 
-        return render_template('orders_compl.html', orders=complete_orders_dto), 200
+        return render_template('orders_compl.html', orders=complete_orders_dto, id=id), 200
     except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
         abort(500)
+
+
+@managers_bp.route('/managers/<int:id>/orders/completes/search', methods=['GET'])
+@login_required
+@manager_required
+def search_orders_compl(id):
+    logger.debug(f'{request.method} /managers/{id}/orders/completes/search')
+
+    incomplete_orders = OrdersService.get_orders_by_manager_id_filter(id, True,
+                                                                      request.args.get('client_name'),
+                                                                      request.args.get('driver_name'),
+                                                                      request.args.get('product_name'),
+                                                                      request.args.get('delivery_address'),
+                                                                      request.args.get('product_volume'),
+                                                                      request.args.get('order_amount'))
+
+    incomplete_orders_dto = [
+        schemas.OrderDto(
+            id=order.id,
+            client_name=order.client_name,
+            driver_name=order.driver_name,
+            product_name=order.product_name,
+            product_volume=order.product_volume,
+            data=order.data,
+            deliver_address=order.delivery_address,
+            warehouse_address=order.warehouse_address,
+            order_amount=order.order_amount
+        ).dict()
+        for order in incomplete_orders
+    ]
+
+    return render_template('managers_orders_search.html', orders=incomplete_orders_dto, id=id), 200
 
 
 @managers_bp.route('/managers/<int:id>/clients', methods=['GET', 'POST'])
@@ -237,7 +301,25 @@ def managers_products(id):
 
     try:
         return render_template('products_list.html',
-                               pws=ProductService.get_product_with_warehouses()), 200
+                               pws=ProductService.get_product_with_warehouses(), id=id), 200
+    except SQLAlchemyError as ex:
+        db.session.rollback()
+        logger.exception(ex)
+        abort(500)
+
+
+@managers_bp.route('/managers/<int:id>/products/search', methods=['GET'])
+@login_required
+@manager_required
+def managers_products_search(id):
+    logger.debug(f'{request.method} /managers/{id}/products/search')
+
+    try:
+        return render_template('filter_product.html',
+                               pws=ProductService.
+                               get_product_with_warehouses_filter(
+                                   request.args.get('name'), request.args.get('price'), request.args.get('quantity'),
+                                   request.args.get('address'), request.args.get('type'))), 200
     except SQLAlchemyError as ex:
         db.session.rollback()
         logger.exception(ex)
@@ -248,6 +330,8 @@ def managers_products(id):
 @login_required
 @manager_required
 def all_clients(id):
+    logger.debug(f'{request.method} /managers/{id}/clients/all')
+
     try:
         clients = ClientService.get_clients()
         return render_template('all_clients.html', clients=clients, id=id), 200

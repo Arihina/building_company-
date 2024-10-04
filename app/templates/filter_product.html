@@ -8,27 +8,6 @@
 <body style="background-image: url({{ url_for('static', filename='img/tile.jpg') }});">
 <div class="block">
     <h1>Товары и склады</h1>
-    <div class="search">
-        <form action="{{ url_for('managers_bp.managers_products_search', id=id) }}" method="get" novalidate>
-            <legend>Поиск</legend>
-            <label for="name">Наименование:</label>
-            <input type="text" name="name">
-
-            <label for="price">Цена:</label>
-            <input type="text" name="price">
-
-            <label for="type">Тип:</label>
-            <input type="text" name="type">
-
-            <label for="quantity">Кол-во:</label>
-            <input type="text" name="quantity">
-
-            <label for="address">Адрес склада:</label>
-            <input type="text" name="address">
-
-            <button type="submit">Найти</button>
-        </form>
-    </div>
     <div class="container">
         <table class="table_dark">
             <tr>

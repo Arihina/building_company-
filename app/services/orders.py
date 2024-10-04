@@ -63,6 +63,61 @@ class OrdersService:
         return results
 
     @staticmethod
+    def get_orders_by_manager_id_filter(manager_id: int, status: bool, client_name: str, driver_name: str,
+                                        product_name: str, deliver_address: str, volume: str, amount: str
+                                        ) -> list[models.Orders]:
+        employee_alias = aliased(models.Employee)
+        client_alias = aliased(models.Client)
+        contract_alias = aliased(models.Contract)
+        consist_alias = aliased(models.Consist)
+        product_alias = aliased(models.Product)
+        driver_alias = aliased(models.Driver)
+        warehouse_alias = aliased(models.Warehouse)
+        orders_alias = aliased(models.Orders)
+
+        query = (
+            select(
+                client_alias.full_name.label("client_name"),
+                orders_alias.id,
+                orders_alias.delivery_address,
+                orders_alias.product_volume,
+                product_alias.name.label("product_name"),
+                driver_alias.full_name.label("driver_name"),
+                consist_alias.order_amount,
+                consist_alias.data,
+                warehouse_alias.address.label("warehouse_address")
+            )
+            .join(contract_alias, orders_alias.contract_id == contract_alias.id)
+            .join(employee_alias, contract_alias.employee_id == employee_alias.id)
+            .join(client_alias, contract_alias.client_id == client_alias.id)
+            .join(consist_alias, contract_alias.contract_consist_id == consist_alias.id)
+            .join(product_alias, consist_alias.product_id == product_alias.id)
+            .join(driver_alias, orders_alias.driver_id == driver_alias.id)
+            .join(warehouse_alias, orders_alias.warehouse_id == warehouse_alias.id)
+            .where(
+                employee_alias.id == manager_id,
+                orders_alias.status.is_(status)
+            )
+        )
+
+        if client_name:
+            query = query.filter(client_alias.full_name == client_name)
+        if driver_name:
+            query = query.filter(driver_alias.full_name == driver_name)
+        if product_name:
+            query = query.filter(product_alias.name == product_name)
+        if deliver_address:
+            query = query.filter(orders_alias.delivery_address == deliver_address)
+        if volume:
+            query = query.filter(orders_alias.product_volume == int(volume))
+        if amount:
+            query = query.filter(consist_alias.order_amount == float(amount))
+
+        results = db.session.execute(query).fetchall()
+
+        return results
+
+    @staticmethod
     def add_order(manager_id: int, new_order: NewOrderDto) -> None:
         if new_order.product_id is None and new_order.product_name is None:
             raise ValueError('No data about the product')
