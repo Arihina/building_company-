@@ -16,6 +16,8 @@ It is designed for two user roles: admin and manager. The manager can only work 
 
 ## Frontend: HTML (jinja) + CSS + JavaScript
 
+### Data validation: Pydantic
+
 ### Dependency
 
 python 3.12 or high
