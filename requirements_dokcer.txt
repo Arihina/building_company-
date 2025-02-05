@@ -1,0 +1,9 @@
+flask
+pydantic
+pydantic-settings
+flask-sqlalchemy
+psycopg[binary]==3.2.1
+flask-cors
+flask-login
+requests
+flask-migrate

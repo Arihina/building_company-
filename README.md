@@ -25,3 +25,8 @@ python 3.12 or high
 ### Build system
 
 poetry
+
+
+### Run in Docker
+
+docker compose up --build
